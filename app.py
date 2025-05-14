@@ -6,15 +6,15 @@ import pickle
 import gdown
 import os
 
-# Google Drive file IDs
-MODEL_FILE_ID = 'https://drive.google.com/file/d/1b0ny-ePb8v4kuSLgIbRmWiyhovRSihWr/view?usp=drive_link'
-ENCODER_FILE_ID = 'https://drive.google.com/file/d/10FmmSOvJZsFsyMK0zhUh3y2TKEdMpEuA/view?usp=drive_link'
+# Google Drive file IDs (✅ only file ID, not full link)
+MODEL_FILE_ID = '1b0ny-ePb8v4kuSLgIbRmWiyhovRSihWr'
+ENCODER_FILE_ID = '10FmmSOvJZsFsyMK0zhUh3y2TKEdMpEuA'
 
 # Local filenames
 MODEL_PATH = 'best_model.h5'
 ENCODER_PATH = 'label_encoder.pkl'
 
-# Download model if not exists
+# Download model from Google Drive
 @st.cache_resource
 def load_model():
     if not os.path.exists(MODEL_PATH):
@@ -23,7 +23,7 @@ def load_model():
     model = tf.keras.models.load_model(MODEL_PATH)
     return model
 
-# Download label encoder if not exists
+# Download label encoder from Google Drive
 @st.cache_resource
 def load_encoder():
     if not os.path.exists(ENCODER_PATH):
@@ -40,15 +40,16 @@ def extract_features(audio_file):
     mel_db = np.resize(mel_db, (128, 128))
     return mel_db
 
-# Streamlit UI
+# Streamlit App UI
 st.set_page_config(page_title="Baby Cry Detector", layout="centered")
 st.title("👶 Baby Cry Sound Detector")
+st.markdown("Upload a `.wav` file of baby cry and get the prediction.")
 
 uploaded_file = st.file_uploader("Upload a baby cry sound (.wav)", type=["wav"])
 
 if uploaded_file is not None:
     st.audio(uploaded_file, format='audio/wav')
-    
+
     try:
         model = load_model()
         encoder = load_encoder()
@@ -62,5 +63,6 @@ if uploaded_file is not None:
             predicted_label = encoder.inverse_transform([predicted_index])[0]
 
         st.success(f"🍼 Predicted Cry Type: **{predicted_label}**")
+
     except Exception as e:
-        st.error(f"Error: {e}")
+        st.error(f"❌ Error: {e}")
