@@ -7,11 +7,11 @@ import gdown
 import os
 
 # Google Drive file IDs
-MODEL_FILE_ID = '1b0ny-ePb8v4kuSLgIbRmWiyhovRSihWr'
-ENCODER_FILE_ID = '10FmmSOvJZsFsyMK0zhUh3y2TKEdMpEuA'
+MODEL_FILE_ID = 'https://drive.google.com/file/d/1b0ny-ePb8v4kuSLgIbRmWiyhovRSihWr/view?usp=drive_link'
+ENCODER_FILE_ID = 'https://drive.google.com/file/d/10FmmSOvJZsFsyMK0zhUh3y2TKEdMpEuA/view?usp=drive_link'
 
 # Local filenames
-MODEL_PATH = 'model.h5'
+MODEL_PATH = 'best_model.h5'
 ENCODER_PATH = 'label_encoder.pkl'
 
 # Download model if not exists
