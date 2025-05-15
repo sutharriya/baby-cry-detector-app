@@ -1,68 +1,95 @@
-import streamlit as st
+import os
 import numpy as np
 import librosa
+import joblib
 import tensorflow as tf
-import pickle
+from flask import Flask, request, render_template_string
+
+# ✅ Google Drive se model & label encoder download
 import gdown
-import os
 
-# Google Drive file IDs (✅ only file ID, not full link)
-MODEL_FILE_ID = '1b0ny-ePb8v4kuSLgIbRmWiyhovRSihWr'
-ENCODER_FILE_ID = '10FmmSOvJZsFsyMK0zhUh3y2TKEdMpEuA'
+MODEL_ID = "16mHv7vT3FFh7J-BBM0Dn_L30w22UBq79"
+ENCODER_ID = "1Fu-HKsq6_6gnMPgUa9cCV-sebmRxoGCE"
+MODEL_PATH = "best_model.h5"
+ENCODER_PATH = "label_encoder.pkl"
 
-# Local filenames
-MODEL_PATH = 'best_model.h5'
-ENCODER_PATH = 'label_encoder.pkl'
+if not os.path.exists(MODEL_PATH):
+    print("🔽 Downloading model...")
+    gdown.download(f"https://drive.google.com/uc?id={MODEL_ID}", MODEL_PATH, quiet=False)
 
-# Download model from Google Drive
-@st.cache_resource
-def load_model():
-    if not os.path.exists(MODEL_PATH):
-        with st.spinner("Downloading model..."):
-            gdown.download(f'https://drive.google.com/uc?id={MODEL_FILE_ID}', MODEL_PATH, quiet=False)
-    model = tf.keras.models.load_model(MODEL_PATH)
-    return model
+if not os.path.exists(ENCODER_PATH):
+    print("🔽 Downloading label encoder...")
+    gdown.download(f"https://drive.google.com/uc?id={ENCODER_ID}", ENCODER_PATH, quiet=False)
 
-# Download label encoder from Google Drive
-@st.cache_resource
-def load_encoder():
-    if not os.path.exists(ENCODER_PATH):
-        with st.spinner("Downloading label encoder..."):
-            gdown.download(f'https://drive.google.com/uc?id={ENCODER_FILE_ID}', ENCODER_PATH, quiet=False)
-    with open(ENCODER_PATH, 'rb') as f:
-        return pickle.load(f)
+# ✅ Load Model & Label Encoder
+model = tf.keras.models.load_model("best_model.h5")
+label_encoder = joblib.load("label_encoder.pkl")
 
-# Feature extraction
-def extract_features(audio_file):
-    y, sr = librosa.load(audio_file, sr=22050)
-    mel = librosa.feature.melspectrogram(y=y, sr=sr)
+# ✅ Flask App Setup
+app = Flask(__name__)
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# ✅ Feature Extraction Function
+def extract_features(file_path, duration=4, sr=22050, n_mels=128):
+    samples = sr * duration
+    y, sr = librosa.load(file_path, sr=sr)
+    if len(y) < samples:
+        y = np.pad(y, (0, samples - len(y)))
+    else:
+        y = y[:samples]
+    mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels)
     mel_db = librosa.power_to_db(mel, ref=np.max)
-    mel_db = np.resize(mel_db, (128, 128))
-    return mel_db
+    mel_db = mel_db / np.max(np.abs(mel_db))  # Normalize
+    return mel_db.astype(np.float32)
 
-# Streamlit App UI
-st.set_page_config(page_title="Baby Cry Detector", layout="centered")
-st.title("👶 Baby Cry Sound Detector")
-st.markdown("Upload a `.wav` file of baby cry and get the prediction.")
+# ✅ Updated HTML Template (Top 3 Labels ke liye)
+HTML_TEMPLATE = '''
+<!doctype html>
+<title>Baby Cry Predictor</title>
+<h2>Upload a Baby Cry .wav file</h2>
+<form method=post enctype=multipart/form-data>
+  <input type=file name=file accept=".wav">
+  <input type=submit value=Predict>
+</form>
 
-uploaded_file = st.file_uploader("Upload a baby cry sound (.wav)", type=["wav"])
+{% if predictions %}
+  <h3>🔊 Top 3 Predictions:</h3>
+  <ul>
+    {% for label, prob in predictions.items() %}
+      <li><strong>{{ label }}</strong>: {{ prob }}%</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+'''
 
-if uploaded_file is not None:
-    st.audio(uploaded_file, format='audio/wav')
+# ✅ Routes
+@app.route('/', methods=['GET', 'POST'])
+def predict():
+    predictions = None
+    if request.method == 'POST':
+        file = request.files.get('file')
+        if file and file.filename.endswith('.wav'):
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+            file.save(filepath)
 
-    try:
-        model = load_model()
-        encoder = load_encoder()
+            features = extract_features(filepath)
+            features = np.expand_dims(features, axis=-1)  # (128, time, 1)
+            features = np.expand_dims(features, axis=0)   # (1, 128, time, 1)
 
-        with st.spinner("Analyzing cry..."):
-            features = extract_features(uploaded_file)
-            features = np.expand_dims(features, axis=(0, -1))  # Shape: (1, 128, 128, 1)
+            preds = model.predict(features)[0]  # Get first element
 
-            prediction = model.predict(features)
-            predicted_index = np.argmax(prediction)
-            predicted_label = encoder.inverse_transform([predicted_index])[0]
+            # Top 3 predictions nikalna
+            top_indices = preds.argsort()[-3:][::-1]
+            labels = label_encoder.inverse_transform(top_indices)
+            probs = preds[top_indices] * 100  # % me convert
 
-        st.success(f"🍼 Predicted Cry Type: **{predicted_label}**")
+            # Label aur % ek dictionary me store
+            predictions = {label: round(prob, 2) for label, prob in zip(labels, probs)}
 
-    except Exception as e:
-        st.error(f"❌ Error: {e}")
+    return render_template_string(HTML_TEMPLATE, predictions=predictions)
+
+# ✅ Run App
+if __name__ == '__main__':
+    app.run(debug=True)
