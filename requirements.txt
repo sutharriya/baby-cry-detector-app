@@ -4,5 +4,5 @@ numpy==1.26.4
 librosa==0.10.1
 scikit-learn==1.3.2
 joblib==1.3.2
-Pillow==25.1.1
+Pillow==9.1.1
 soundfile==0.12.1
