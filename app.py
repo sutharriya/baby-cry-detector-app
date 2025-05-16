@@ -7,9 +7,6 @@ import tensorflow as tf
 import pickle
 from sklearn.preprocessing import LabelEncoder
 
-# Hugging Face direct URLs
-MODEL_URL = "https://huggingface.co/sutharriya/baby-cry/resolve/main/best_model.h5"
-ENCODER_URL = "https://huggingface.co/sutharriya/baby-cry/resolve/main/label_encoder.pkl"
 
 # Function to download files
 def download_files():
