@@ -1,5 +1,3 @@
-import os
-import urllib.request
 import streamlit as st
 import numpy as np
 import librosa
@@ -7,25 +5,14 @@ import tensorflow as tf
 import pickle
 from sklearn.preprocessing import LabelEncoder
 
-
-# Function to download files
-def download_files():
-    if not os.path.exists("best_model.h5"):
-        urllib.request.urlretrieve(MODEL_URL, "best_model.h5")
-    if not os.path.exists("label_encoder.pkl"):
-        urllib.request.urlretrieve(ENCODER_URL, "label_encoder.pkl")
-
-# Download model and encoder if not present
-download_files()
-
-# Load the model
+# ✅ Load the model (local)
 model = tf.keras.models.load_model("best_model.h5")
 
-# Load the label encoder
+# ✅ Load the label encoder (local)
 with open("label_encoder.pkl", "rb") as f:
     label_encoder: LabelEncoder = pickle.load(f)
 
-# Feature extraction function
+# ✅ Feature extraction
 def extract_features(file_path):
     y, sr = librosa.load(file_path, sr=22050)
     mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128)
@@ -34,7 +21,7 @@ def extract_features(file_path):
     mel_db = tf.image.resize(mel_db, [128, 128])  # Resize to (128, 128, 1)
     return np.expand_dims(mel_db, axis=0)  # (1, 128, 128, 1)
 
-# Streamlit UI
+# ✅ Streamlit UI
 st.title("👶 Baby Cry Detector")
 st.write("Upload a baby cry audio file (.wav) to detect the reason.")
 
