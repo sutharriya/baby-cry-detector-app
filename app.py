@@ -10,17 +10,10 @@ from tensorflow.keras.layers import Bidirectional, LSTM
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 tf.get_logger().setLevel('ERROR')
 
-# Custom LSTM class to handle version incompatibility
-class CompatibleLSTM(tf.keras.layers.LSTM):
-    def __init__(self, *args, **kwargs):
-        # Remove problematic argument for newer TF versions
-        kwargs.pop('time_major', None)
-        super().__init__(*args, **kwargs)
-
 # Custom objects for model loading
 CUSTOM_OBJECTS = {
     'Bidirectional': Bidirectional,
-    'LSTM': CompatibleLSTM
+    'LSTM': LSTM
 }
 
 @st.cache_resource
@@ -95,7 +88,7 @@ if uploaded_file:
             
             if features is not None:
                 # Make prediction
-                prediction = model.predict(features)
+                prediction = model.predict(features, verbose=0)
                 predicted_class = encoder.inverse_transform([np.argmax(prediction)])[0]
                 
                 # Display result
