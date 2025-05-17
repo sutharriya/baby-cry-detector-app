@@ -1,24 +1,30 @@
-import streamlit as st
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
+import warnings
+warnings.filterwarnings('ignore')
+
 import numpy as np
 import librosa
+import joblib
 import tensorflow as tf
-import pickle
-import os
-from tensorflow.keras.layers import Bidirectional, LSTM
+from tensorflow.keras.layers import LSTM, Bidirectional
+import streamlit as st
 
-# Configuration to suppress TensorFlow warnings
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-tf.get_logger().setLevel('ERROR')
+# Custom LSTM layer to handle version incompatibility
+class CompatibleLSTM(LSTM):
+    def __init__(self, *args, **kwargs):
+        kwargs.pop('time_major', None)  # Remove problematic argument
+        super().__init__(*args, **kwargs)
 
-# Custom objects for model loading
+# Define custom objects for model loading
 CUSTOM_OBJECTS = {
-    'Bidirectional': Bidirectional,
-    'LSTM': LSTM
+    'LSTM': CompatibleLSTM,
+    'Bidirectional': Bidirectional
 }
 
 @st.cache_resource
-def load_model_and_encoder():
-    """Load and cache the model and label encoder"""
+def load_components():
+    """Load model and encoder with compatibility fixes"""
     try:
         # Load model with custom objects
         model = tf.keras.models.load_model(
@@ -28,44 +34,57 @@ def load_model_and_encoder():
         )
         
         # Load label encoder
-        with open("label_encoder.pkl", "rb") as f:
-            encoder = pickle.load(f)
-            
-        return model, encoder
+        label_encoder = joblib.load("label_encoder.pkl")
+        
+        return model, label_encoder
     except Exception as e:
         st.error(f"❌ Error loading model components: {str(e)}")
         st.stop()
 
-# Load components
-model, encoder = load_model_and_encoder()
-
-def extract_features(file_path):
+# Feature extraction function
+def extract_features(file_path, duration=4, sr=22050, n_mels=128):
     """Extract mel-spectrogram features from audio file"""
     try:
         # Load audio file
-        y, sr = librosa.load(file_path, sr=22050)
+        y, sr = librosa.load(file_path, sr=sr)
+        
+        # Ensure consistent length
+        samples = sr * duration
+        if len(y) < samples:
+            y = np.pad(y, (0, samples - len(y)))
+        else:
+            y = y[:samples]
         
         # Extract mel-spectrogram
-        mel = librosa.feature.melspectrogram(y=y, sr=sr)
+        mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels)
         mel_db = librosa.power_to_db(mel, ref=np.max)
         
-        # Add channel dimension and resize
+        # Normalize and add channel dimension
+        mel_db = mel_db / np.max(np.abs(mel_db))
         mel_db = mel_db[..., np.newaxis]
-        mel_db = tf.image.resize(mel_db, [128, 128])
         
-        return np.expand_dims(mel_db, axis=0)
+        return mel_db.astype(np.float32)
     except Exception as e:
         st.error(f"❌ Error processing audio file: {str(e)}")
         return None
 
-# Streamlit UI
-st.set_page_config(page_title="Baby Cry Detector", page_icon="👶")
+# Streamlit UI setup
+st.set_page_config(
+    page_title="Baby Cry Detector",
+    page_icon="👶",
+    layout="centered"
+)
+
+# App title and description
 st.title("👶 Baby Cry Detector")
-st.write("Upload a baby cry audio file (.wav) to identify the reason for crying.")
+st.markdown("""
+Upload a baby cry audio file (.wav) to predict the reason for crying.
+The model will show the top 3 most likely reasons.
+""")
 
 # File uploader
 uploaded_file = st.file_uploader(
-    "Choose a WAV file", 
+    "Choose a WAV file",
     type=["wav"],
     accept_multiple_files=False
 )
@@ -87,21 +106,30 @@ if uploaded_file:
             features = extract_features(temp_file)
             
             if features is not None:
+                # Prepare input shape (1, 128, time, 1)
+                features = np.expand_dims(features, axis=-1)
+                features = np.expand_dims(features, axis=0)
+                
                 # Make prediction
-                prediction = model.predict(features, verbose=0)
-                predicted_class = encoder.inverse_transform([np.argmax(prediction)])[0]
+                preds = model.predict(features, verbose=0)[0]
                 
-                # Display result
-                st.success(f"**Predicted Cry Type:** {predicted_class}")
+                # Get top 3 predictions
+                top_indices = preds.argsort()[-3:][::-1]
+                labels = label_encoder.inverse_transform(top_indices)
+                probs = preds[top_indices] * 100  # Convert to percentage
                 
-                # Optional: Show confidence scores
-                with st.expander("See detailed probabilities"):
-                    st.write("Class probabilities:")
-                    for i, prob in enumerate(prediction[0]):
-                        st.write(f"{encoder.classes_[i]}: {prob:.2%}")
+                # Display results
+                st.subheader("🔊 Prediction Results")
+                
+                # Show predictions as progress bars
+                for label, prob in zip(labels, probs):
+                    st.write(f"**{label}**")
+                    st.progress(int(prob))
+                    st.write(f"{prob:.2f}% confidence")
+                    st.write("---")
     
     except Exception as e:
-        st.error(f"❌ An error occurred during processing: {str(e)}")
+        st.error(f"❌ An error occurred: {str(e)}")
     
     finally:
         # Clean up temporary file
@@ -110,4 +138,7 @@ if uploaded_file:
 
 # Add footer
 st.markdown("---")
-st.caption("Note: This is a demo application for baby cry classification. For medical concerns, please consult a pediatrician.")
+st.caption("""
+Note: This is a demo application for baby cry classification. 
+For medical concerns, please consult a pediatrician.
+""")
