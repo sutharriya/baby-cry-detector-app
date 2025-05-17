@@ -24,7 +24,7 @@ def load_model_and_encoder():
         model = tf.keras.models.load_model(
             "best_model.h5",
             custom_objects=CUSTOM_OBJECTS,
-            compile=False
+            compile=True
         )
         
         # Load label encoder
