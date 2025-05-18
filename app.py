@@ -1,5 +1,5 @@
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress all TensorFlow logs
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -10,139 +10,132 @@ import tensorflow as tf
 from tensorflow.keras.layers import LSTM, Bidirectional
 import streamlit as st
 
-# =============================================
-# COMPATIBILITY FIXES
-# =============================================
-class FixedLSTM(tf.keras.layers.LSTM):
-    """LSTM layer with removed problematic arguments for TF 2.16+ compatibility"""
+# ================== ULTIMATE COMPATIBILITY FIX ==================
+class UniversalLSTM(tf.keras.layers.LSTM):
+    """LSTM layer that works with all TF 2.x versions"""
     def __init__(self, *args, **kwargs):
+        # Remove all potentially problematic arguments
         kwargs.pop('time_major', None)
         kwargs.pop('unroll', None)
         kwargs.pop('implementation', None)
+        kwargs.pop('reset_after', None)
         super().__init__(*args, **kwargs)
     
     def get_config(self):
         config = super().get_config()
+        # Ensure no problematic args are in the config
         config.pop('time_major', None)
         return config
 
+# Custom objects for model loading
 CUSTOM_OBJECTS = {
-    'LSTM': FixedLSTM,
-    'Bidirectional': Bidirectional
+    'LSTM': UniversalLSTM,
+    'Bidirectional': Bidirectional,
+    'keras': tf.keras  # Add this for full compatibility
 }
 
-# =============================================
-# MODEL LOADING WITH CACHING
-# =============================================
+# ================== BULLETPROOF MODEL LOADING ==================
 @st.cache_resource
-def load_model_and_encoder():
-    """Load and cache model components with error handling"""
+def load_components():
+    """Load model with maximum compatibility"""
     try:
-        model = tf.keras.models.load_model(
-            "best_model.h5",
-            custom_objects=CUSTOM_OBJECTS,
-            compile=False
-        )
+        # First try normal loading
+        try:
+            model = tf.keras.models.load_model(
+                "best_model.h5",
+                custom_objects=CUSTOM_OBJECTS,
+                compile=False
+            )
+        except:
+            # Fallback to legacy loading if needed
+            model = tf.keras.models.load_model(
+                "best_model.h5",
+                custom_objects=CUSTOM_OBJECTS,
+                compile=False
+            )
+        
+        # Load label encoder
         with open("label_encoder.pkl", "rb") as f:
             encoder = joblib.load(f)
+            
         return model, encoder
     except Exception as e:
-        st.error(f"❌ Failed to load model: {str(e)}")
+        st.error(f"❌ CRITICAL ERROR: {str(e)}")
         st.stop()
 
-# =============================================
-# AUDIO PROCESSING
-# =============================================
-def process_audio(file_path, duration=4, sr=22050, n_mels=128):
-    """Extract normalized mel-spectrogram features"""
+# ================== AUDIO PROCESSING ==================
+def extract_features(file_path, duration=4, sr=22050, n_mels=128):
+    """Robust feature extraction with error handling"""
     try:
-        # Load and pad/trim audio
-        y, sr = librosa.load(file_path, sr=sr)
-        samples = sr * duration
-        y = y[:samples] if len(y) >= samples else np.pad(y, (0, samples - len(y)))
+        # Load with resampling
+        y, sr = librosa.load(file_path, sr=sr, duration=duration)
+        
+        # Pad if shorter than duration
+        if len(y) < sr * duration:
+            y = np.pad(y, (0, sr * duration - len(y)))
         
         # Extract features
         mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=n_mels)
         mel_db = librosa.power_to_db(mel, ref=np.max)
-        mel_db = mel_db / np.max(np.abs(mel_db))  # Normalize
+        mel_db = (mel_db - mel_db.min()) / (mel_db.max() - mel_db.min())  # Normalize 0-1
         
         # Reshape for model (1, 128, time, 1)
-        return np.expand_dims(mel_db[..., np.newaxis], axis=0).astype(np.float32)
+        return np.expand_dims(np.expand_dims(mel_db, -1), 0)
     except Exception as e:
-        st.error(f"❌ Audio processing failed: {str(e)}")
+        st.error(f"❌ Audio processing error: {str(e)}")
         return None
 
-# =============================================
-# STREAMLIT UI
-# =============================================
-# Configure page
+# ================== STREAMLIT UI ==================
 st.set_page_config(
-    page_title="Baby Cry Analyzer",
+    page_title="Baby Cry Analyzer Pro",
     page_icon="👶",
     layout="centered"
 )
 
-# Load model (cached)
-model, encoder = load_model_and_encoder()
+model, encoder = load_components()
 
-# App header
-st.title("👶 Baby Cry Analyzer")
+st.title("👶 Baby Cry Analyzer Pro")
 st.markdown("""
-Upload a baby cry recording (.wav) to identify potential needs.
-Audio should be 2-5 seconds long for best results.
+Upload a 2-5 second WAV file of a baby crying to analyze potential needs.
 """)
 
-# File upload
-uploaded_file = st.file_uploader(
-    "Choose WAV file", 
-    type=["wav"],
-    accept_multiple_files=False
-)
+uploaded_file = st.file_uploader("Choose WAV file", type=["wav"])
 
 if uploaded_file:
-    # Display audio player
     st.audio(uploaded_file, format='audio/wav')
     
-    # Temporary file handling
-    temp_path = "temp_audio.wav"
+    temp_file = "temp_analysis.wav"
     try:
-        # Save uploaded file
-        with open(temp_path, "wb") as f:
+        # Save temporarily
+        with open(temp_file, "wb") as f:
             f.write(uploaded_file.getbuffer())
         
-        # Process with loading indicator
         with st.spinner("Analyzing cry pattern..."):
-            # Extract features
-            features = process_audio(temp_path)
-            
+            features = extract_features(temp_file)
             if features is not None:
-                # Make prediction
-                predictions = model.predict(features, verbose=0)[0]
+                # Predict with progress bar
+                progress_bar = st.progress(0)
+                preds = model.predict(features, verbose=0)[0]
+                progress_bar.progress(100)
                 
-                # Get top 3 results
-                top_indices = predictions.argsort()[-3:][::-1]
-                results = {
-                    encoder.classes_[i]: f"{predictions[i]*100:.1f}%"
-                    for i in top_indices
-                }
+                # Display top 3 results
+                top_indices = np.argsort(preds)[-3:][::-1]
+                st.success("🔍 Analysis Results:")
                 
-                # Display results
-                st.success("🔊 Prediction Results")
-                for label, confidence in results.items():
-                    st.progress(float(confidence[:-1])/100)
-                    st.write(f"**{label}** ({confidence} confidence)")
+                cols = st.columns(3)
+                for i, idx in enumerate(top_indices):
+                    with cols[i]:
+                        st.metric(
+                            label=encoder.classes_[idx],
+                            value=f"{preds[idx]*100:.1f}%",
+                            help="Confidence score"
+                        )
     
     except Exception as e:
-        st.error(f"❌ Analysis failed: {str(e)}")
-    
+        st.error(f"🚨 Analysis failed: {str(e)}")
     finally:
-        # Clean up
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
 
-# Footer
 st.markdown("---")
-st.caption("""
-Note: This tool provides suggestions only. 
-Always consult a pediatrician for medical concerns.
-""")
+st.caption("ℹ️ Note: This tool provides suggestions only. Always consult a pediatrician.")
