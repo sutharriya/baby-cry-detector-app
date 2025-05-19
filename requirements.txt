@@ -1,8 +1,8 @@
 streamlit==1.26.0
 tensorflow-cpu==2.16.1
-numpy==1.23.5
+numpy==1.26.7  # Changed from 1.23.5
 librosa==0.10.1
 scikit-learn==1.3.2
 joblib==1.3.2
 soundfile==0.12.1
-Pillow==9.5.0  # Stable version known to build correctly
+Pillow==9.5.0
