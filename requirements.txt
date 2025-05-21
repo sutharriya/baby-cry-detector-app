@@ -1,5 +1,5 @@
 streamlit==1.26.0
-tensorflow-cpu==2.15.1
+tensorflow-cpu==2.18.0
 numpy==1.26.7  # Changed 
 streamlit==1.26.0
 tensorflow-cpu==2.10.0  # Yeh line badli hai
