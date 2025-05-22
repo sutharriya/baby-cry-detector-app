@@ -36,6 +36,7 @@ def extract_features(file_path):
         
         # आवश्यक सैंपल की संख्या की गणना करें
         # (फ्रेम्स की संख्या - 1) * हॉप_लेंथ + n_fft
+        # यह सुनिश्चित करने के लिए कि ऑडियो की लंबाई पर्याप्त हो
         target_samples = (target_frames - 1) * hop_length + n_fft
         
         # ऑडियो को आवश्यक सैंपल की संख्या तक पैड (pad) या ट्रंकेट (truncate) करें
@@ -48,8 +49,21 @@ def extract_features(file_path):
 
         # मेल स्पेक्ट्रोग्राम निकालें
         # n_mels=128 मॉडल के 128 मेल बैंड्स से मेल खाता है
+        # n_fft और hop_length को स्पष्ट रूप से निर्दिष्ट करें ताकि गणनाएँ सुसंगत रहें
         mel = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128, n_fft=n_fft, hop_length=hop_length)
         mel_db = librosa.power_to_db(mel, ref=np.max)
+
+        # अब, सुनिश्चित करें कि mel_db के फ्रेम्स की संख्या (दूसरा आयाम) बिल्कुल target_frames (173) हो।
+        # वर्तमान फ्रेम्स की संख्या
+        current_frames = mel_db.shape[1]
+
+        if current_frames < target_frames:
+            # यदि कम फ्रेम्स हैं, तो पैड करें
+            padding_needed = target_frames - current_frames
+            mel_db = np.pad(mel_db, ((0, 0), (0, padding_needed)), 'constant')
+        elif current_frames > target_frames:
+            # यदि ज़्यादा फ्रेम्स हैं, तो ट्रंकेट करें
+            mel_db = mel_db[:, :target_frames]
 
         # मॉडल को (1, 128, 173) आकार का 3D इनपुट चाहिए।
         # np.expand_dims(mel_db, 0) बैच डायमेंशन (axis=0 पर) जोड़ता है।
@@ -101,8 +115,13 @@ if uploaded_file:
         # इनपुट शेप की संगतता जांचें
         # मॉडल के अपेक्षित इनपुट शेप का पहला तत्व (None) बैच साइज़ है,
         # इसलिए हम इसकी तुलना नहीं करते, बल्कि बाकी आयामों की तुलना करते हैं।
-        if model.input_shape and len(model.input_shape) == len(features.shape) and \
-           all(s1 == s2 or s1 is None for s1, s2 in zip(model.input_shape[1:], features.shape[1:])):
+        # हम यहाँ len(model.input_shape) == len(features.shape) की जांच भी कर रहे हैं क्योंकि
+        # model.input_shape में None हो सकता है।
+        # features.shape में 1 होगा क्योंकि हमने np.expand_dims(mel_db, 0) का उपयोग किया है।
+        # इसलिए, हम केवल अंतिम दो आयामों (128 और 173) की तुलना करेंगे।
+        if model.input_shape and \
+           model.input_shape[1] == features.shape[1] and \
+           model.input_shape[2] == features.shape[2]: # केवल 128 और 173 की तुलना करें
             # यदि शेप संगत हैं, तो प्रेडिक्शन करें
             pred = model.predict(features, verbose=0)[0]
             top_idx = np.argmax(pred)
