@@ -59,6 +59,7 @@ def extract_features(file_path):
 
         current_frames = mel_db.shape[1]
 
+        # Ensure the number of frames (second dimension of mel_db) is exactly target_frames (173).
         if current_frames < target_frames:
             # Pad if there are fewer frames
             padding_needed = target_frames - current_frames
@@ -69,12 +70,14 @@ def extract_features(file_path):
             mel_db = mel_db[:, :target_frames]
             st.write("DEBUG: 9. Mel_db truncated to target frames.") # DEBUG POINT 9
 
+        # Model expects a 3D input of shape (1, 128, 173).
+        # np.expand_dims(mel_db, 0) adds the batch dimension (at axis=0).
         st.write(f"DEBUG: 10. Final mel_db shape before expanding dims: {mel_db.shape}") # DEBUG POINT 10
         return np.expand_dims(mel_db, 0) 
 
     except Exception as e:
-        st.error(f"ऑडियो प्रोसेसिंग में विफल: {str(e)}")
-        st.write(f"DEBUG: ERROR caught during feature extraction: {str(e)}") # DEBUG POINT 11 - This will also go to logs
+        st.error(f"Audio processing failed: {str(e)}")
+        st.write(f"DEBUG: ERROR caught during feature extraction: {str(e)}") # DEBUG POINT 11
         return None
 
 # Streamlit page configuration
@@ -83,12 +86,13 @@ st.set_page_config(page_title="Baby Cry Detector", page_icon="👶", layout="cen
 # Cache the model and encoder to prevent reloading on every app rerun
 @st.cache_resource
 def load_all():
-    st.write("DEBUG: 0. Loading model and encoder...") # DEBUG POINT 0 - This appears when the app starts
+    st.write("DEBUG: 0. Loading model and encoder...") # DEBUG POINT 0
     model = load_model_anyway("best_model.h5") # Ensure this path is correct
     encoder = joblib.load("label_encoder.pkl") # Ensure this path is correct
     if model:
         # Log expected input shape for debugging
         st.write(f"DEBUG: Model loaded. Expected input shape: {model.input_shape}")
+    st.write(f"DEBUG: Encoder loaded. Class names: {encoder.classes_}") # DEBUG POINT: Check encoder
     return model, encoder
 
 # Load model and encoder
@@ -132,16 +136,18 @@ if uploaded_file:
                 
                 st.write("DEBUG: Making prediction...") # DEBUG POINT Prediction Start
                 pred = model.predict(features, verbose=0)[0]
+                st.write(f"DEBUG: Prediction made. Raw prediction: {pred}") # DEBUG POINT: Raw prediction
                 
                 # Get indices of top predictions (e.g., top 3)
                 top_n_indices = np.argsort(pred)[::-1][:3] # Get top 3 indices
+                st.write(f"DEBUG: Top N indices: {top_n_indices}") # DEBUG POINT: Indices
 
                 st.subheader("Prediction Results:")
                 for i in top_n_indices:
                     label = encoder.classes_[i]
                     probability = pred[i] * 100
                     st.write(f"- **{label.replace('_', ' ').title()}**: {probability:.1f}%") # Format output
-                st.write("DEBUG: Prediction complete.") # DEBUG POINT Prediction End
+                st.write("DEBUG: Prediction complete.") # DEBUG POINT: Prediction Complete
                 
             else:
                 # If shapes do not match, show error and stop
@@ -158,4 +164,4 @@ if uploaded_file:
             os.remove(temp_file_path)
             st.write("DEBUG: Temporary file removed.") # DEBUG POINT Temp file removed
         except Exception as e:
-            st.write(f"DEBUG: ERROR removing temp file: {str(e)}") # DEBUG POINT Temp file removal error
+            st.write(f"DEBUG: ERROR removing temp file: {str(e)}")
