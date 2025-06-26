@@ -1,0 +1,177 @@
+/* Base styles for the body */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f8ff; /* Light blue background */
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #333;
+}
+/* Container for the main tool content (used on index.html) */
+.container {
+    background-color: #1A202C; /* Dark background to match Gradio's theme */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 700px; /* Wider container for better tool display */
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 30px; /* Space before blog links */
+}
+/* Styling for the main heading on index.html */
+.container h1 {
+    color: #F8FAFC; /* Very light color for heading on dark background for excellent contrast */
+    margin-bottom: 15px;
+    font-size: 2.2em; /* Slightly larger heading */
+}
+/* Styling for paragraphs (general rule, adjusted for dark background) on index.html */
+.container p {
+    color: #E2E8F0; /* Lighter, but clearly visible color for paragraphs on dark background */
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+/* Styling for the Gradio app component */
+gradio-app {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Slight shadow for the app */
+}
+/* Styling for blog links and support sections */
+.blog-links, .support-section, .nav-buttons-section {
+    background-color: #e6f7ff; /* Lighter blue for blog/support section */
+    padding: 25px;
+    border-radius: 8px;
+    margin-top: 30px;
+    max-width: 700px;
+    width: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+/* Styling for H2 headings within these sections */
+.blog-links h2, .support-section h2, .nav-buttons-section h2 {
+    color: #2c3e50; /* Dark color for headings on light background */
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+/* Styling for paragraphs inside light sections */
+.blog-links p, .support-section p, .nav-buttons-section p {
+    color: #4A5568; /* Darker grey for better contrast on light backgrounds */
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+/* Styling for the blog links list */
+.blog-links ul {
+    list-style: none; /* Remove bullet points */
+    padding: 0;
+}
+.blog-links li {
+    margin-bottom: 10px;
+}
+/* Styling for links in the blog section */
+.blog-links a {
+    color: #007bff; /* Blue links */
+    text-decoration: none;
+    font-weight: bold;
+}
+.blog-links a:hover {
+    text-decoration: underline;
+}
+/* Styling for the support button */
+.support-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745; /* Green button */
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+.support-button:hover {
+    background-color: #218838;
+}
+
+/* Styles for blog post content area */
+.content-page-container {
+    margin-top: 30px;
+    max-width: 700px;
+    width: 100%;
+    background-color: #ffffff; /* White background for the content area */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    text-align: left; /* Align text to left for readability in blog posts */
+    overflow-y: auto; /* Allow scrolling for long content */
+    margin-bottom: 30px; /* Space at the bottom */
+}
+.content-page-container h1, .content-page-container h2, .content-page-container h3 {
+    color: #2c3e50;
+    text-align: left; /* Ensure headings align left within this section */
+    margin-bottom: 15px;
+}
+.content-page-container p {
+    color: #555; /* Default paragraph color for light background */
+    text-align: left; /* Ensure paragraphs align left within this section */
+    line-height: 1.7;
+    margin-bottom: 1em;
+}
+.content-page-container ul {
+    list-style: disc; /* Use disc bullets for lists */
+    text-align: left;
+    margin-left: 20px;
+    margin-bottom: 1em;
+}
+.content-page-container ul li {
+    margin-bottom: 0.5em;
+}
+
+/* Styles for navigation buttons */
+.nav-buttons-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    justify-content: center;
+    gap: 15px; /* Space between buttons */
+    margin-top: 20px;
+}
+.nav-button {
+    display: inline-block;
+    padding: 8px 18px; /* Reduced padding */
+    font-size: 0.9em; /* Reduced font size */
+    background-image: linear-gradient(to right, #6A1B9A, #9C27B0); /* Purple gradient */
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+    flex-grow: 1; /* Allow buttons to grow and fill space */
+    max-width: 160px; /* Max width for individual buttons (also reduced) */
+}
+.nav-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background-image: linear-gradient(to right, #9C27B0, #6A1B9A); /* Reverse gradient on hover */
+}
+/* Responsive adjustments for nav buttons */
+@media (max-width: 768px) {
+    .nav-buttons-container {
+        flex-direction: column; /* Stack buttons vertically on small screens */
+        align-items: center;
+    }
+    .nav-button {
+        max-width: 80%; /* Buttons take more width on small screens */
+        padding: 10px 20px; /* Slightly larger touch target on mobile */
+        font-size: 1em; /* Restore slightly larger font for mobile readability */
+    }
+}
