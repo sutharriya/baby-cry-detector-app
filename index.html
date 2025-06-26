@@ -3,105 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baby Cry Analyzer: Understand Your Infant's Cries with AI - Free Online Tool</title>
+    <title>AI Baby Cry Analyzer: Understand Your Infant's Cries with AI - Free Online Tool</title>
     
     <meta name="description" content="Use our free online AI Baby Cry Analyzer to understand why your infant is crying. Get instant insights into different cry types like hunger, sleep, or discomfort. Your essential baby cry translator app.">
     <meta name="keywords" content="baby cry analyzer, cry analyzer online, baby cry analyzer app, baby cry analyzer free, baby cry analyzer app free, baby cry sound analyzer, cry analyzer baby translator app, cry analyzer baby translator, best cry analyzer app, cry analyzer online free, cry alert, cry detection sensor, cry sound machine, understand infant cries, AI baby tool, newborn cry meaning">
 
-    <script
-        type="module"
-        src="https://gradio.s3-us-west-2.amazonaws.com/5.31.0/gradio.js"
-    ></script>
+    <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/5.33.0/gradio.js"></script>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID" crossorigin="anonymous"></script>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f8ff; /* Light blue background */
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            color: #333;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 700px; /* Wider container for better tool display */
-            width: 100%;
-            margin-top: 30px;
-            margin-bottom: 30px; /* Space before blog links */
-        }
-        h1 {
-            color: #2c3e50; /* Darker blue for headings */
-            margin-bottom: 15px;
-            font-size: 2.2em; /* Slightly larger heading */
-        }
-        p {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        gradio-app {
-            width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-top: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Slight shadow for the app */
-        }
-        .blog-links, .support-section {
-            background-color: #e6f7ff; /* Lighter blue for blog/support section */
-            padding: 25px;
-            border-radius: 8px;
-            margin-top: 30px;
-            max-width: 700px;
-            width: 100%;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            text-align: center;
-        }
-        .blog-links h2, .support-section h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.8em;
-        }
-        .blog-links ul {
-            list-style: none;
-            padding: 0;
-        }
-        .blog-links li {
-            margin-bottom: 10px;
-        }
-        .blog-links a {
-            color: #007bff; /* Blue links */
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .blog-links a:hover {
-            text-decoration: underline;
-        }
-        .support-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #28a745; /* Green button */
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            margin-top: 15px;
-        }
-        .support-button:hover {
-            background-color: #218838;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -109,17 +20,17 @@
         <p>Welcome, new parents! Are you struggling to understand why your baby is crying? Our **free online AI Baby Cry Analyzer** can help. Simply upload or record your baby's cry, and our advanced tool will provide instant insights into the possible reasons behind it, giving you peace of mind.</p>
         <p>Built with cutting-edge AI technology, this **baby cry translator tool** aims to assist you in decoding different types of infant cries, whether it's for hunger, sleep, discomfort, or more. Get accurate, real-time analysis directly from your browser. It's the **best cry analyzer app** you'll find for quick insights!</p>
         
-<gradio-app src="https://sutharriya-baby-cry-sense-tool.hf.space" theme="dark"></gradio-app>
-
-        </div>
+        <gradio-app src="https://sutharriya-baby-cry-detector-new.hf.space"></gradio-app>
+    </div>
 
     <div class="blog-links">
         <h2>Learn More About Baby Cries and Parenting</h2>
         <p>Explore our helpful articles and guides to better understand your baby's needs:</p>
         <ul>
-            <li><a href="why-babies-cry-types.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
-            <li><a href="soothing-a-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
-            </ul>
+            <li><a href="why-babies-cry.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
+            <li><a href="soothe-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
+            <li><a href="faq.html">Baby Cry Analyzer - Frequently Asked Questions (F.A.Q.)</a></li>
+        </ul>
     </div>
 
     <div class="support-section">
@@ -127,6 +38,16 @@
         <p>If our **free Baby Cry Analyzer** provided valuable insights and peace of mind, consider supporting our ongoing efforts to develop helpful tools for parents. Your contribution helps us keep this service free and improve it!</p>
         <a href="YOUR_PAYPAL_OR_BUYMEACOFFEE_LINK" target="_blank" class="support-button">Support Our Work!</a>
         <p style="font-size: 0.8em; color: #777; margin-top: 10px;">(This is a donation, not a payment for service.)</p>
+    </div>
+
+    <div class="nav-buttons-section">
+        <h2>More Information</h2>
+        <div class="nav-buttons-container">
+            <a href="about-us.html" class="nav-button">About Us</a>
+            <a href="privacy-policy.html" class="nav-button">Privacy Policy</a>
+            <a href="disclaimer.html" class="nav-button">Disclaimer</a>
+            <a href="mailto:your-email@example.com?subject=Feedback about Baby Cry Analyzer" class="nav-button" target="_blank">Feedback</a>
+        </div>
     </div>
 
 </body>
