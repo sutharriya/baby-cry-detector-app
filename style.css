@@ -13,6 +13,43 @@ body {
     color: #333;
 }
 /* Container for the main tool content (used on index.html) */
+/* --- Main Website Logo Styling --- */
+.main-header {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.website-main-logo {
+    max-width: 280px;
+    height: auto;
+    display: block;
+    margin: 0 auto 15px auto;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    .website-main-logo {
+        max-width: 200px;
+        margin-bottom: 10px;
+    }
+    .main-header {
+        padding: 15px 0;
+    }
+}
+
+/* --- Gradio App specific adjustments (optional, but can help layout) --- */
+/* You can add this section to your existing CSS, if it's not already there */
+gradio-app {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    display: block;
+}
+
+/* Rest of your existing CSS styles */
 .container {
     background-color: #1A202C; /* Dark background to match Gradio's theme */
     padding: 30px;
