@@ -9,32 +9,59 @@
     <meta name="keywords" content="baby cry analyzer, cry analyzer online, baby cry analyzer app, baby cry analyzer free, baby cry analyzer app free, baby cry sound analyzer, cry analyzer baby translator app, cry analyzer baby translator, best cry analyzer app, cry analyzer online free, cry alert, cry detection sensor, cry sound machine, understand infant cries, AI baby tool, newborn cry meaning">
 
     <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/5.33.0/gradio.js"></script>
-
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="/baby-cry-detector-app/style.css">
     <link rel="icon" href="/baby-cry-detector-app/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <div class="main-header"> <img src="/baby-cry-detector-app/logofull.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo">
-    <div class="container">
+
+    <!-- Main website header for the full logo -->
+    <div class="main-header"> 
+        <img src="/baby-cry-detector-app/logofull.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo">
+    </div>
+
+    <!-- Initial 10-second loading overlay for the entire tool container -->
+    <!-- This will be visible for 10 seconds, then hide to reveal the tool content -->
+    <div id="initial-loading-overlay">
+        <div class="spinner-container">
+            <!-- Your circular logo for the spinning animation -->
+            <img src="/baby-cry-detector-app/circular_logo.png" alt="Loading Logo" class="spinner-logo">
+            <p>Initializing AI Baby Cry Analyzer... Please wait.</p>
+        </div>
+    </div>
+
+    <!-- Main content container, including the Gradio tool and its related text -->
+    <!-- This container will be hidden initially and shown after the 10-second timer -->
+    <div class="container" id="tool-container">
         <h1>AI Baby Cry Analyzer: Understand Your Infant's Cries Instantly</h1>
         <p>Welcome, new parents! Are you struggling to understand why your baby is crying? Our free online "AI Baby Cry Analyzer" can help. Simply upload or record your baby's cry, and our advanced tool will provide instant insights into the possible reasons behind it, giving you peace of mind.</p>
         <p>Built with cutting-edge AI technology, this baby cry translator tool aims to assist you in decoding different types of infant cries, whether it's for hunger, sleep, discomfort, or more. Get accurate, real-time analysis directly from your browser. It's the **best cry analyzer app** you'll find for quick insights!</p>
         
-        <gradio-app src="https://sutharriya-baby-cry-detector-new.hf.space"></gradio-app>
+        <!-- Gradio App Embed Code - Added ID for JavaScript targeting -->
+        <gradio-app src="https://sutharriya-baby-cry-detector-new.hf.space" id="gradio-tool"></gradio-app>
+
+        <!-- Processing spinner overlay for Gradio app (initially hidden) -->
+        <!-- This will appear when Gradio is processing an input -->
+        <div id="processing-spinner" class="processing-hidden">
+            <img src="/baby-cry-detector-app/circular_logo.png" alt="Processing..." class="spinner-logo">
+            <p>Analyzing cry... Please wait.</p>
+        </div>
     </div>
 
+    <!-- Blog Links Section -->
     <div class="blog-links">
         <h2>Learn More About Baby Cries and Parenting</h2>
         <p>Explore our helpful articles and guides to better understand your baby's needs:</p>
         <ul>
+            <!-- FIXED: Corrected filenames for these links -->
             <li><a href="/baby-cry-detector-app/why-babies-cry-types.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
             <li><a href="/baby-cry-detector-app/soothing-a-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
             <li><a href="/baby-cry-detector-app/faq.html">Baby Cry Analyzer - Frequently Asked Questions (F.A.Q.)</a></li>
         </ul>
     </div>
 
+    <!-- Support Section -->
     <div class="support-section">
         <h2>Did Our Tool Help You?</h2>
         <p>If our **free Baby Cry Analyzer** provided valuable insights and peace of mind, consider supporting our ongoing efforts to develop helpful tools for parents. Your contribution helps us keep this service free and improve it!</p>
@@ -42,6 +69,7 @@
         <p style="font-size: 0.8em; color: #777; margin-top: 10px;">(This is a donation, not a payment for service.)</p>
     </div>
 
+    <!-- Navigation Buttons Section -->
     <div class="nav-buttons-section">
         <h2>More Information</h2>
         <div class="nav-buttons-container">
@@ -51,5 +79,62 @@
             <a href="mailto:your-email@example.com?subject=Feedback about Baby Cry Analyzer" class="nav-button" target="_blank">Feedback</a>
         </div>
     </div>
+
+    <!-- JavaScript code for controlling loaders -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialLoadingOverlay = document.getElementById('initial-loading-overlay');
+            const toolContainer = document.getElementById('tool-container');
+            const gradioTool = document.getElementById('gradio-tool'); // Get Gradio app by ID
+            const processingSpinner = document.getElementById('processing-spinner');
+
+            // --- Initial 10-second page loader ---
+            // Ensure the initial overlay is visible immediately on DOMContentLoaded
+            initialLoadingOverlay.classList.remove('loading-hidden'); // Make sure it's not hidden by default CSS
+            initialLoadingOverlay.classList.add('loading-visible');
+
+            // Hide the initial loader and show the tool content after 10 seconds
+            setTimeout(() => {
+                initialLoadingOverlay.classList.remove('loading-visible');
+                initialLoadingOverlay.classList.add('loading-hidden'); // Start fade-out effect
+
+                toolContainer.classList.add('loaded'); // Show the main tool content with fade-in
+                gradioTool.classList.add('loaded'); // Ensure Gradio app itself is also revealed
+                
+            }, 10000); // 10,000 milliseconds = 10 seconds
+
+            // --- Gradio Processing Spinner ---
+            if (gradioTool) {
+                // When Gradio starts processing (e.g., after clicking submit)
+                gradioTool.addEventListener('submit', () => {
+                    processingSpinner.classList.remove('processing-hidden');
+                    processingSpinner.classList.add('processing-visible'); // Show the processing spinner
+                    gradioTool.classList.add('is-processing'); // Optional: Dim Gradio app slightly
+                });
+
+                // When Gradio finishes processing or emits any message
+                gradioTool.addEventListener('message', (event) => {
+                    // Using a small timeout to ensure the user sees the spinner for a minimum duration,
+                    // and for smoother transition, even if Gradio processes very quickly.
+                    setTimeout(() => {
+                        processingSpinner.classList.remove('processing-visible');
+                        processingSpinner.classList.add('processing-hidden'); // Hide the processing spinner
+                        gradioTool.classList.remove('is-processing'); // Remove dimming
+                    }, 500); // Hide after 0.5 seconds to ensure smooth transition
+                });
+
+                // Hide spinner if an error occurs during Gradio processing
+                gradioTool.addEventListener('error', () => {
+                    processingSpinner.classList.remove('processing-visible');
+                    processingSpinner.classList.add('processing-hidden');
+                    gradioTool.classList.remove('is-processing');
+                    console.error("Gradio app encountered an error.");
+                });
+
+            } else {
+                console.warn("Gradio app element with ID 'gradio-tool' not found. Spinner control may not work.");
+            }
+        });
+    </script>
 </body>
 </html>
