@@ -16,9 +16,12 @@
 </head>
 <body>
 
-    <!-- Main website header for the full logo -->
+    <!-- Main website header - This will always be visible -->
     <div class="main-header"> 
+        <!-- Assuming logo.png is your rectangular main logo. Please confirm if it's 'logofull.png' -->
         <img src="/baby-cry-detector-app/logofull.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo">
+        <!-- The H1 for the website title will now be inside the main tool container,
+             which appears after the initial loader, making sense for the tool. -->
     </div>
 
     <!-- Initial 10-second loading overlay for the entire tool container -->
@@ -54,7 +57,7 @@
         <h2>Learn More About Baby Cries and Parenting</h2>
         <p>Explore our helpful articles and guides to better understand your baby's needs:</p>
         <ul>
-            <!-- FIXED: Corrected filenames for these links -->
+            <!-- Corrected filenames for these links -->
             <li><a href="/baby-cry-detector-app/why-babies-cry-types.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
             <li><a href="/baby-cry-detector-app/soothing-a-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
             <li><a href="/baby-cry-detector-app/faq.html">Baby Cry Analyzer - Frequently Asked Questions (F.A.Q.)</a></li>
@@ -90,7 +93,7 @@
 
             // --- Initial 10-second page loader ---
             // Ensure the initial overlay is visible immediately on DOMContentLoaded
-            initialLoadingOverlay.classList.remove('loading-hidden'); // Make sure it's not hidden by default CSS
+            initialLoadingOverlay.classList.remove('loading-hidden'); 
             initialLoadingOverlay.classList.add('loading-visible');
 
             // Hide the initial loader and show the tool content after 10 seconds
