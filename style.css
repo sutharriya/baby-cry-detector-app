@@ -281,7 +281,7 @@ gradio-app {
 .spinner-logo {
     width: 120px; /* Size of your spinning circular logo (adjust as needed for your image) */
     height: 120px;
-    animation: spin 2s linear infinite; /* Apply the spinning animation */
+animation: half-spin 2s ease-in-out infinite alternate; /* 'spin' को 'half-spin' में बदला, और properties भी बदली */
 }
 
 /* --- Utility classes for showing/hiding with smooth transitions --- */
@@ -314,9 +314,9 @@ gradio-app {
 
 
 /* Keyframes for the spinning animation */
-@keyframes spin {
+@keyframes half-spin { /* 'spin' को 'half-spin' में बदला */
     0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    100% { transform: rotate(180deg); } /* अब यह 180 डिग्री तक घूमेगा */
 }
 
 /* --- Gradio app and tool container initial hidden state --- */
