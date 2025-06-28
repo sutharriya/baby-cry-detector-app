@@ -45,7 +45,7 @@ body {
 
 /* --- Container for the main tool content --- */
 /* This div wraps the Gradio app and its introductory text */
-.container {
+#tool-container { /* Changed from .container to #tool-container for specific targeting */
     background-color: #1A202C; /* Dark background to match Gradio's theme */
     padding: 30px;
     border-radius: 10px;
@@ -53,14 +53,14 @@ body {
     text-align: center;
     max-width: 700px;
     width: 100%;
-    margin-top: 0; 
+    margin-top: 0; /* Adjusted: No top margin as main-header handles spacing */
     margin-bottom: 30px;
-    position: relative; 
-    overflow: hidden; 
+    position: relative; /* Needed for absolute positioning of processing spinner */
+    overflow: hidden; /* Important to contain processing spinner */
     
-    /* Initially hidden state, revealed by JS when Gradio loads */
-    opacity: 0;
-    pointer-events: none;
+    /* Initially hidden by display: none, then block by JS */
+    display: none; /* Crucial: Hidden by default until JavaScript makes it block */
+    opacity: 0; /* For fade-in effect when shown */
     transition: opacity 0.5s ease-in-out;
 }
 
@@ -72,15 +72,15 @@ gradio-app {
     margin-top: 25px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     
-    /* Initially hidden state, revealed by JS when Gradio loads */
-    opacity: 0;
-    pointer-events: none;
+    /* Initially hidden by JS, then revealed with parent */
+    opacity: 0; /* Hidden by default (for fade-in) */
+    pointer-events: none; /* Not interactive initially */
     transition: opacity 0.5s ease-in-out;
 }
 
 /* Styling for the main heading inside the tool container */
 .container h1 {
-    color: #F8FAFA; /* Changed to match Gradio's text color */
+    color: #F8FAFC;
     margin-bottom: 15px;
     font-size: 2.2em;
 }
@@ -232,7 +232,7 @@ gradio-app {
     }
 }
 
-/* --- Initial Loading Overlay (for entire tool/page content) --- */
+/* --- Initial 10-second Loading Overlay (for entire tool/page content) --- */
 #initial-loading-overlay {
     position: fixed; /* Fixed position to cover the whole viewport */
     top: 0;
@@ -245,29 +245,25 @@ gradio-app {
     justify-content: center;
     align-items: center;
     z-index: 2000; /* Ensure it's on top of everything else */
-    transition: opacity 0.5s ease-out, visibility 0.5s ease-out; /* Smooth fade-out */
     opacity: 1; /* Initially visible */
     visibility: visible;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out; /* Smooth fade-out */
 }
 
-#initial-loading-overlay .spinner-container {
-    text-align: center;
-}
-
-#initial-loading-overlay p {
-    margin-top: 15px;
-    font-size: 1.2em;
-    color: #333;
-    font-weight: bold;
+/* State when the initial loader is hidden after 10 seconds */
+#initial-loading-overlay.loading-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none; /* Prevents interaction when hidden */
 }
 
 /* --- Processing Spinner (for Gradio app when it's actively working) --- */
 #processing-spinner {
-    display: none; /* Hidden by default, JavaScript will make it 'flex' */
+    /* Initially hidden by display: none via the processing-hidden class below */
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: absolute; /* Positioned relative to its parent .container */
+    position: absolute; /* Positioned relative to its parent #tool-container */
     top: 0;
     left: 0;
     width: 100%;
@@ -281,48 +277,42 @@ gradio-app {
 .spinner-logo {
     width: 120px; /* Size of your spinning circular logo (adjust as needed for your image) */
     height: 120px;
-    animation: half-spin 2s ease-in-out infinite alternate; 
+    animation: spin 2s linear infinite; /* Apply the spinning animation */
 }
 
-/* --- Utility classes for showing/hiding with smooth transitions --- */
-/* These classes are now applied by JS to control visibility */
-.loading-hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none; /* Prevents interaction when hidden */
-}
-
+/* --- Utility classes for showing/hiding elements (JS controlled) --- */
+/* For initial-loading-overlay */
 .loading-visible {
     opacity: 1;
     visibility: visible;
-    pointer-events: auto; /* Allows interaction when visible */
+    pointer-events: auto;
 }
 
+/* For processing-spinner */
 .processing-hidden {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    display: none !important; /* Ensure it's completely off the layout when hidden */
+    display: none; /* Completely removes it from layout when hidden */
 }
 
 .processing-visible {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    display: flex !important; /* Ensure it's flex when visible */
+    display: flex; /* Makes it visible and uses flexbox for centering */
 }
-
 
 /* Keyframes for the spinning animation */
-@keyframes half-spin { 
+@keyframes spin {
     0% { transform: rotate(0deg); }
-    100% { transform: rotate(180deg); } 
+    100% { transform: rotate(360deg); }
 }
 
-/* --- Gradio app and tool container initial hidden state --- */
+/* --- Gradio app and #tool-container initial hidden state --- */
 /* These make sure the tool content and Gradio app are not visible until the initial loader finishes */
 #tool-container, gradio-app {
-    opacity: 0; /* Hidden by default */
+    opacity: 0; /* Hidden by default (for fade-in) */
     pointer-events: none; /* Not interactive initially */
     transition: opacity 0.5s ease-in-out; /* Smooth fade-in effect */
 }
