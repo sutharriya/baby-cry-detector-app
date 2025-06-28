@@ -1,329 +1,169 @@
-/* --- Base styles for the body --- */
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f8ff; /* Light blue background */
-    margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
-    color: #333;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f8ff;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+  box-sizing: border-box;
 }
 
-/* --- Main Website Header and Logo Styling --- */
 .main-header {
-    text-align: center;
-    padding: 20px 0;
-    background-color: #ffffff;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    margin-bottom: 30px;
-    width: 100%; /* Ensure header takes full width */
-    max-width: 700px; /* Match content container max-width */
-    border-radius: 8px; /* Consistent rounded corners */
+  text-align: center;
+  padding: 20px 0;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  width: 100%;
+  max-width: 700px;
+  border-radius: 8px;
+  margin-bottom: 30px;
 }
-
 .website-main-logo {
-    max-width: 250px; /* Max width for rectangular logo on desktop (Adjust this to your logo's actual size if different) */
-    height: auto;
-    display: block;
-    margin: 0 auto 15px auto;
+  max-width: 250px;
+  display: block;
+  margin: 0 auto 15px auto;
 }
 
-/* Responsive adjustments for mobile */
-@media (max-width: 768px) {
-    .website-main-logo {
-        max-width: 200px; /* Reduce logo size on mobile */
-        margin-bottom: 10px;
-    }
-    .main-header {
-        padding: 15px 0;
-    }
+/* Tool container */
+#tool-container {
+  background-color: #1A202C;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
 }
 
-/* --- Container for the main tool content --- */
-/* This div wraps the Gradio app and its introductory text */
-#tool-container { 
-    background-color: #1A202C; /* Dark background to match Gradio's theme */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 700px;
-    width: 100%;
-    margin-top: 0; 
-    margin-bottom: 30px;
-    position: relative; /* Needed for absolute positioning of processing spinner */
-    overflow: hidden; /* Important to contain processing spinner */
-    
-    /* Initially hidden by opacity, then revealed by JS */
-    opacity: 0; 
-    pointer-events: none; 
-    transition: opacity 0.5s ease-in-out;
+#tool-container.loaded {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* Styling for Gradio app component */
 gradio-app {
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    /* No initial opacity here, let parent #tool-container handle it */
-    transition: opacity 0.5s ease-in-out; 
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* Styling for the main heading inside the tool container */
-.container h1 {
-    color: #F8FAFC;
-    margin-bottom: 15px;
-    font-size: 2.2em;
-}
-/* Styling for paragraphs inside the tool container */
-.container p {
-    color: #E2E8F0;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-/* --- Blog links and support sections styles --- */
-.blog-links, .support-section, .nav-buttons-section {
-    background-color: #e6f7ff; /* Lighter blue */
-    padding: 25px;
-    border-radius: 8px;
-    margin-top: 30px;
-    max-width: 700px;
-    width: 100%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    text-align: center;
-}
-
-.blog-links h2, .support-section h2, .nav-buttons-section h2 {
-    color: #2c3e50;
-    margin-bottom: 20px;
-    font-size: 1.8em;
-}
-
-.blog-links p, .support-section p, .nav-buttons-section p {
-    color: #4A5568;
-    line-height: 1.6;
-    margin-bottom: 15px;
-}
-
-.blog-links ul {
-    list-style: none;
-    padding: 0;
-}
-
-.blog-links li {
-    margin-bottom: 10px;
-}
-
-.blog-links a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.blog-links a:hover {
-    text-decoration: underline;
-}
-
-.support-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    margin-top: 15px;
-}
-
-.support-button:hover {
-    background-color: #218838;
-}
-
-/* --- Styles for other content pages (e.g., FAQ, About Us) --- */
-.content-page-container {
-    margin-top: 30px;
-    max-width: 700px;
-    width: 100%;
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    text-align: left;
-    overflow-y: auto;
-    margin-bottom: 30px;
-}
-
-.content-page-container h1, .content-page-container h2, .content-page-container h3 {
-    color: #2c3e50;
-    text-align: left;
-    margin-bottom: 15px;
-}
-
-.content-page-container p {
-    color: #555;
-    text-align: left;
-    line-height: 1.7;
-    margin-bottom: 1em;
-}
-
-.content-page-container ul {
-    list-style: disc;
-    text-align: left;
-    margin-left: 20px;
-    margin-bottom: 1em;
-}
-
-.content-page-container ul li {
-    margin-bottom: 0.5em;
-}
-
-/* --- Navigation buttons styles --- */
-.nav-buttons-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.nav-button {
-    display: inline-block;
-    padding: 8px 18px;
-    font-size: 0.9em;
-    background-image: linear-gradient(to right, #6A1B9A, #9C27B0);
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: none;
-    cursor: pointer;
-    flex-grow: 1;
-    max-width: 160px;
-}
-
-.nav-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    background-image: linear-gradient(to right, #9C27B0, #6A1B9A);
-}
-
-@media (max-width: 768px) {
-    .nav-buttons-container {
-        flex-direction: column;
-        align-items: center;
-    }
-    .nav-button {
-        max-width: 80%;
-        padding: 10px 20px;
-        font-size: 1em;
-    }
-}
-
-/* --- Initial 10-second Loading Overlay (for entire tool/page content) --- */
+/* Initial loader */
 #initial-loading-overlay {
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #f0f8ff; 
-    display: flex; 
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000; 
-    /* The 'loading-visible' class added by JS will set opacity: 1 and visibility: visible */
-    opacity: 0; /* Initially hidden, made visible by JS for 10s */
-    visibility: hidden; /* Hidden by default */
-    transition: opacity 0.5s ease-out, visibility 0.5s ease-out; 
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f8ff;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
-/* State when the initial loader is hidden after 10 seconds */
-#initial-loading-overlay.loading-hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none; 
-}
-
-/* --- Processing Spinner (for Gradio app when it's actively working) --- */
-#processing-spinner {
-    /* Initially hidden by processing-hidden class */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8); 
-    z-index: 1500; 
-    border-radius: 10px; 
-}
-
-/* --- Common Spinner Logo Styling --- */
-.spinner-logo {
-    width: 120px; 
-    height: 120px;
-    animation: flip 2s ease-in-out infinite alternate; /* Changed to flip animation */
-}
-
-/* --- Utility classes for showing/hiding elements (JS controlled) --- */
-/* For initial-loading-overlay */
 .loading-visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
 }
 
-/* For processing-spinner */
-.processing-hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    display: none !important; /* Completely off the layout when hidden */
+/* Hide overlay */
+.loading-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Spinner animation */
+.spinner-logo {
+  width: 120px;
+  height: 120px;
+  animation: flip 2s ease-in-out infinite alternate;
+  backface-visibility: hidden;
+}
+
+@keyframes flip {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(180deg); }
+}
+
+/* Processing Spinner (Gradio) */
+#processing-spinner {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  z-index: 1500;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .processing-visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    display: flex !important; /* Makes it visible and uses flexbox for centering */
+  display: flex !important;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 
-/* Keyframes for the flip animation (0 to 180 degrees) */
-@keyframes flip {
-    0% { transform: rotateY(0deg); }
-    100% { transform: rotateY(180deg); }
+.processing-hidden {
+  display: none !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-/* --- #tool-container initial hidden state --- */
-/* This ensures the tool content is hidden initially until JS makes it visible */
-#tool-container {
-    opacity: 0; 
-    pointer-events: none; 
-    transition: opacity 0.5s ease-in-out;
-    display: block; /* Important: Keep it block but initially invisible via opacity */
-}
-
-/* State when the tool container and Gradio app are loaded and visible */
-#tool-container.loaded { 
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* Optional: Dimming Gradio app slightly when it's processing */
+/* Optional dimming */
 gradio-app.is-processing {
-    opacity: 0.5;
-    pointer-events: none;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Blog, Support & Navigation */
+.blog-links, .support-section, .nav-buttons-section {
+  background-color: #e6f7ff;
+  padding: 25px;
+  border-radius: 8px;
+  margin-top: 30px;
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.nav-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  background-image: linear-gradient(to right, #6A1B9A, #9C27B0);
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  transform: translateY(-2px);
+  background-image: linear-gradient(to right, #9C27B0, #6A1B9A);
 }
