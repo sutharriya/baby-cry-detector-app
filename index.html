@@ -18,11 +18,11 @@
 
     <!-- Main website header - This will always be visible -->
     <div class="main-header"> 
-        <!-- Assuming logo.png is your rectangular main logo. Please confirm if it's 'logofull.png' -->
+        <!-- Assuming logo.png is your rectangular main logo. Confirm if it's 'logofull.png' -->
         <img src="/baby-cry-detector-app/logo.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo">
     </div>
 
-    <!-- Initial 10-second loading overlay for the entire tool container -->
+    <!-- Initial 10-second loading overlay for the entire tool content -->
     <!-- This will be visible for 10 seconds, then hide to reveal the tool content -->
     <div id="initial-loading-overlay">
         <div class="spinner-container">
@@ -33,7 +33,7 @@
     </div>
 
     <!-- Main content container, including the Gradio tool and its related text -->
-    <!-- This container will be hidden initially and shown after the the initial loader is done -->
+    <!-- This container will be hidden initially and shown after the initial loader is done -->
     <div class="container" id="tool-container">
         <h1>AI Baby Cry Analyzer: Understand Your Infant's Cries Instantly</h1>
         <p>Welcome, new parents! Are you struggling to understand why your baby is crying? Our free online "AI Baby Cry Analyzer" can help. Simply upload or record your baby's cry, and our advanced tool will provide instant insights into the possible reasons behind it, giving you peace of mind.</p>
@@ -90,13 +90,19 @@
             const processingSpinner = document.getElementById('processing-spinner');
 
             // --- Initial 10-second page loader ---
+            // Ensure the initial overlay is visible immediately on DOMContentLoaded
+            initialLoadingOverlay.classList.remove('loading-hidden'); 
+            initialLoadingOverlay.classList.add('loading-visible');
+
             // Hide the initial loader and show the tool content after 10 seconds
             setTimeout(() => {
+                initialLoadingOverlay.classList.remove('loading-visible');
                 initialLoadingOverlay.classList.add('loading-hidden'); // Start fade-out effect
 
-                // After the fade-out, completely hide the overlay and then display the tool container
+                // After the fade-out, ensure the initialLoadingOverlay is completely removed from layout
+                // and then display the toolContainer.
                 initialLoadingOverlay.addEventListener('transitionend', () => {
-                    initialLoadingOverlay.style.display = 'none'; // Remove from layout
+                    initialLoadingOverlay.style.display = 'none'; // Completely remove from layout
                     toolContainer.style.display = 'block'; // Make tool container block-level
                     toolContainer.classList.add('loaded'); // Trigger fade-in on tool container
                 }, { once: true }); // Ensure this listener fires only once
