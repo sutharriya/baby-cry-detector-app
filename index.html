@@ -71,44 +71,49 @@
 
   <!-- JavaScript -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const initialLoadingOverlay = document.getElementById('initial-loading-overlay');
-      const toolContainer = document.getElementById('tool-container');
-      const gradioTool = document.getElementById('gradio-tool');
-      const processingSpinner = document.getElementById('processing-spinner');
+    document.addEventListener('DOMContentLoaded', function() {
+        const initialLoadingOverlay = document.getElementById('initial-loading-overlay');
+        const toolContainer = document.getElementById('tool-container');
+        const gradioTool = document.getElementById('gradio-tool');
+        const processingSpinner = document.getElementById('processing-spinner');
 
-      // Spinner delay for 10 seconds
-      setTimeout(() => {
-        initialLoadingOverlay.classList.remove('loading-visible');
-        initialLoadingOverlay.classList.add('loading-hidden');
-        toolContainer.classList.add('loaded');
-      }, 10000);
+        // Show initial loading overlay immediately
+        initialLoadingOverlay.classList.add('loading-visible');
 
-      // Gradio Processing Spinner
-      if (gradioTool) {
-        gradioTool.addEventListener('submit', () => {
-          processingSpinner.classList.remove('processing-hidden');
-          processingSpinner.classList.add('processing-visible');
-          gradioTool.classList.add('is-processing');
-        });
+        // --- Initial 10-second page loader ---
+        setTimeout(() => {
+            initialLoadingOverlay.classList.remove('loading-visible');
+            initialLoadingOverlay.classList.add('loading-hidden'); // Start fade-out effect
 
-        gradioTool.addEventListener('message', () => {
-          setTimeout(() => {
-            processingSpinner.classList.remove('processing-visible');
-            processingSpinner.classList.add('processing-hidden');
-            gradioTool.classList.remove('is-processing');
-          }, 500);
-        });
+            toolContainer.classList.add('loaded'); // Reveal the tool container after fade
+        }, 10000); // 10,000 milliseconds = 10 seconds
 
-        gradioTool.addEventListener('error', () => {
-          processingSpinner.classList.remove('processing-visible');
-          processingSpinner.classList.add('processing-hidden');
-          gradioTool.classList.remove('is-processing');
-          console.error("Gradio app error.");
-        });
-      }
+        // --- Gradio Processing Spinner ---
+        if (gradioTool) {
+            gradioTool.addEventListener('submit', () => {
+                processingSpinner.classList.remove('processing-hidden');
+                processingSpinner.classList.add('processing-visible'); 
+                gradioTool.classList.add('is-processing');
+            });
+
+            gradioTool.addEventListener('message', () => {
+                setTimeout(() => {
+                    processingSpinner.classList.remove('processing-visible');
+                    processingSpinner.classList.add('processing-hidden');
+                    gradioTool.classList.remove('is-processing');
+                }, 500);
+            });
+
+            gradioTool.addEventListener('error', () => {
+                processingSpinner.classList.remove('processing-visible');
+                processingSpinner.classList.add('processing-hidden');
+                gradioTool.classList.remove('is-processing');
+                console.error("Gradio app encountered an error.");
+            });
+        } else {
+            console.warn("Gradio app element with ID 'gradio-tool' not found.");
+        }
     });
-  </script>
-
+</script>
 </body>
 </html>
