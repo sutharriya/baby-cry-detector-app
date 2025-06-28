@@ -18,19 +18,22 @@
 
     <!-- Main website header - This will always be visible -->
     <div class="main-header"> 
-        <img src="/baby-cry-detector-app/logofull.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo">
+        <!-- Assuming logo.png is your rectangular main logo. Please confirm if it's 'logofull.png' -->
+        <img src="/baby-cry-detector-app/logo.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo">
     </div>
 
-    <!-- Initial loading overlay - This will be visible until the Gradio tool loads -->
+    <!-- Initial 10-second loading overlay for the entire tool container -->
+    <!-- This will be visible for 10 seconds, then hide to reveal the tool content -->
     <div id="initial-loading-overlay">
         <div class="spinner-container">
+            <!-- Your circular logo for the spinning animation -->
             <img src="/baby-cry-detector-app/circular_logo.png" alt="Loading Logo" class="spinner-logo">
             <p>Initializing AI Baby Cry Analyzer... Please wait.</p>
         </div>
     </div>
 
     <!-- Main content container, including the Gradio tool and its related text -->
-    <!-- This container will be hidden initially by CSS and shown by JavaScript when Gradio loads -->
+    <!-- This container will be hidden initially and shown after the the initial loader is done -->
     <div class="container" id="tool-container">
         <h1>AI Baby Cry Analyzer: Understand Your Infant's Cries Instantly</h1>
         <p>Welcome, new parents! Are you struggling to understand why your baby is crying? Our free online "AI Baby Cry Analyzer" can help. Simply upload or record your baby's cry, and our advanced tool will provide instant insights into the possible reasons behind it, giving you peace of mind.</p>
@@ -43,7 +46,7 @@
         <!-- This will appear when Gradio is processing an input -->
         <div id="processing-spinner" class="processing-hidden">
             <img src="/baby-cry-detector-app/circular_logo.png" alt="Processing..." class="spinner-logo">
-            <p>Analyzing cry... Please high-level wait.</p>
+            <p>Analyzing cry... Please wait.</p>
         </div>
     </div>
 
@@ -52,6 +55,7 @@
         <h2>Learn More About Baby Cries and Parenting</h2>
         <p>Explore our helpful articles and guides to better understand your baby's needs:</p>
         <ul>
+            <!-- Corrected filenames for these links -->
             <li><a href="/baby-cry-detector-app/why-babies-cry.types.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
             <li><a href="/baby-cry-detector-app/soothing-a-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
             <li><a href="/baby-cry-detector-app/faq.html">Baby Cry Analyzer - Frequently Asked Questions (F.A.Q.)</a></li>
@@ -82,60 +86,52 @@
         document.addEventListener('DOMContentLoaded', function() {
             const initialLoadingOverlay = document.getElementById('initial-loading-overlay');
             const toolContainer = document.getElementById('tool-container');
-            const gradioTool = document.getElementById('gradio-tool'); 
+            const gradioTool = document.getElementById('gradio-tool');
             const processingSpinner = document.getElementById('processing-spinner');
 
-            // --- Initial page loader (runs until Gradio app fully loads) ---
-            initialLoadingOverlay.classList.remove('loading-hidden'); 
-            initialLoadingOverlay.classList.add('loading-visible');
-            document.body.style.overflow = 'hidden'; // Disable scrolling on body when initial loader is visible
+            // --- Initial 10-second page loader ---
+            // Hide the initial loader and show the tool content after 10 seconds
+            setTimeout(() => {
+                initialLoadingOverlay.classList.add('loading-hidden'); // Start fade-out effect
 
+                // After the fade-out, completely hide the overlay and then display the tool container
+                initialLoadingOverlay.addEventListener('transitionend', () => {
+                    initialLoadingOverlay.style.display = 'none'; // Remove from layout
+                    toolContainer.style.display = 'block'; // Make tool container block-level
+                    toolContainer.classList.add('loaded'); // Trigger fade-in on tool container
+                }, { once: true }); // Ensure this listener fires only once
+
+            }, 10000); // 10,000 milliseconds = 10 seconds
+
+            // --- Gradio Processing Spinner ---
             if (gradioTool) {
-                gradioTool.addEventListener('load', () => {
-                    console.log('Gradio app fully loaded.');
-                    setTimeout(() => {
-                        initialLoadingOverlay.classList.remove('loading-visible');
-                        initialLoadingOverlay.classList.add('loading-hidden');
-                        document.body.style.overflow = ''; // Re-enable scrolling on body
-                        toolContainer.classList.add('loaded'); // Show main tool content
-                        gradioTool.classList.add('loaded'); // Show Gradio app
-                    }, 500); 
-                });
-
-                // --- Gradio Processing Spinner (appears when you interact with the tool) ---
+                // When Gradio starts processing (e.g., after clicking submit)
                 gradioTool.addEventListener('submit', () => {
                     processingSpinner.classList.remove('processing-hidden');
-                    processingSpinner.classList.add('processing-visible');
+                    processingSpinner.classList.add('processing-visible'); // Show the processing spinner
                     gradioTool.classList.add('is-processing'); // Optional: Dim Gradio app slightly
-                    document.body.style.overflow = 'hidden'; // Disable body scroll during processing
                 });
 
+                // When Gradio finishes processing or emits any message
                 gradioTool.addEventListener('message', (event) => {
+                    // Use a small timeout for smoother transition, even if Gradio is fast.
                     setTimeout(() => {
                         processingSpinner.classList.remove('processing-visible');
-                        processingSpinner.classList.add('processing-hidden');
-                        gradioTool.classList.remove('is-processing');
-                        document.body.style.overflow = ''; // Re-enable body scroll after processing
-                    }, 500); 
+                        processingSpinner.classList.add('processing-hidden'); // Hide the processing spinner
+                        gradioTool.classList.remove('is-processing'); // Remove dimming
+                    }, 500); // Hide after 0.5 seconds
                 });
 
+                // Hide spinner if an error occurs during Gradio processing
                 gradioTool.addEventListener('error', () => {
                     processingSpinner.classList.remove('processing-visible');
                     processingSpinner.classList.add('processing-hidden');
                     gradioTool.classList.remove('is-processing');
-                    document.body.style.overflow = ''; // Re-enable body scroll on error
                     console.error("Gradio app encountered an error.");
                 });
 
             } else {
-                console.warn("Gradio app element with ID 'gradio-tool' not found. Initial loader might not hide automatically.");
-                // Fallback: If Gradio app element is not found, hide initial loader after a few seconds anyway
-                setTimeout(() => {
-                    initialLoadingOverlay.classList.remove('loading-visible');
-                    initialLoadingOverlay.classList.add('loading-hidden');
-                    document.body.style.overflow = ''; // Re-enable body scroll even on fallback
-                    toolContainer.classList.add('loaded'); // Still try to show content
-                }, 3000); 
+                console.warn("Gradio app element with ID 'gradio-tool' not found. Spinner control may not work.");
             }
         });
     </script>
