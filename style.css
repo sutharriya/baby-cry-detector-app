@@ -1,15 +1,19 @@
+/* --- Base styles for the body --- */
 body {
   font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100vh;
   background-color: #f0f8ff;
   margin: 0;
   padding: 20px;
   box-sizing: border-box;
   color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
+/* --- Header and Logo --- */
 .main-header {
   text-align: center;
   padding: 20px 0;
@@ -23,12 +27,23 @@ body {
 
 .website-main-logo {
   max-width: 250px;
+  height: auto;
   display: block;
   margin: 0 auto 15px auto;
-  height: auto;
 }
 
-.container {
+@media (max-width: 768px) {
+  .website-main-logo {
+    max-width: 200px;
+    margin-bottom: 10px;
+  }
+  .main-header {
+    padding: 15px 0;
+  }
+}
+
+/* --- Tool Container --- */
+#tool-container {
   background-color: #1A202C;
   padding: 30px;
   border-radius: 10px;
@@ -36,6 +51,7 @@ body {
   text-align: center;
   max-width: 700px;
   width: 100%;
+  margin-top: 0;
   margin-bottom: 30px;
   position: relative;
   overflow: hidden;
@@ -44,9 +60,18 @@ body {
   transition: opacity 0.5s ease-in-out;
 }
 
-.container.loaded {
+#tool-container.loaded {
   opacity: 1;
   pointer-events: auto;
+}
+
+gradio-app {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.5s ease-in-out;
 }
 
 .container h1 {
@@ -61,13 +86,7 @@ body {
   margin-bottom: 15px;
 }
 
-gradio-app {
-  width: 100%;
-  margin-top: 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
-
+/* --- Blog and Footer Sections --- */
 .blog-links,
 .support-section,
 .nav-buttons-section {
@@ -77,8 +96,8 @@ gradio-app {
   margin-top: 30px;
   max-width: 700px;
   width: 100%;
-  text-align: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
 .blog-links h2,
@@ -94,6 +113,7 @@ gradio-app {
 .nav-buttons-section p {
   color: #4A5568;
   line-height: 1.6;
+  margin-bottom: 15px;
 }
 
 .blog-links ul {
@@ -116,6 +136,7 @@ gradio-app {
 }
 
 .support-button {
+  display: inline-block;
   padding: 10px 20px;
   background-color: #28a745;
   color: white;
@@ -123,12 +144,54 @@ gradio-app {
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.3s ease;
+  margin-top: 15px;
 }
 
 .support-button:hover {
   background-color: #218838;
 }
 
+/* --- Content Pages --- */
+.content-page-container {
+  margin-top: 30px;
+  max-width: 700px;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  overflow-y: auto;
+  margin-bottom: 30px;
+}
+
+.content-page-container h1,
+.content-page-container h2,
+.content-page-container h3 {
+  color: #2c3e50;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.content-page-container p {
+  color: #555;
+  text-align: left;
+  line-height: 1.7;
+  margin-bottom: 1em;
+}
+
+.content-page-container ul {
+  list-style: disc;
+  text-align: left;
+  margin-left: 20px;
+  margin-bottom: 1em;
+}
+
+.content-page-container ul li {
+  margin-bottom: 0.5em;
+}
+
+/* --- Navigation Buttons --- */
 .nav-buttons-container {
   display: flex;
   flex-wrap: wrap;
@@ -138,21 +201,41 @@ gradio-app {
 }
 
 .nav-button {
-  padding: 10px 18px;
+  display: inline-block;
+  padding: 8px 18px;
+  font-size: 0.9em;
   background-image: linear-gradient(to right, #6A1B9A, #9C27B0);
   color: white;
   border-radius: 5px;
   text-decoration: none;
   font-weight: bold;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  flex-grow: 1;
+  max-width: 160px;
 }
 
 .nav-button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   background-image: linear-gradient(to right, #9C27B0, #6A1B9A);
 }
 
-/* Spinner Overlay */
+@media (max-width: 768px) {
+  .nav-buttons-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .nav-button {
+    max-width: 80%;
+    padding: 10px 20px;
+    font-size: 1em;
+  }
+}
+
+/* --- Initial Spinner Overlay --- */
 #initial-loading-overlay {
   position: fixed;
   top: 0;
@@ -180,22 +263,33 @@ gradio-app {
   transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
 }
 
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .spinner-logo {
   width: 120px;
   height: 120px;
-  animation: flip 2s ease-in-out infinite alternate;
+  animation: half-rotate 2s linear infinite;
+  border-radius: 50%;
+  object-fit: cover;
+  transform-style: preserve-3d;
+  margin: 0 auto;
 }
 
-@keyframes flip {
+@keyframes half-rotate {
   0% {
-    transform: rotateY(0deg);
+    transform: rotateX(0deg);
   }
   100% {
-    transform: rotateY(180deg);
+    transform: rotateX(180deg);
   }
 }
 
-/* Processing Spinner */
+/* --- Gradio Processing Spinner --- */
 #processing-spinner {
   position: absolute;
   top: 0;
@@ -217,222 +311,8 @@ gradio-app {
 .processing-hidden {
   display: none !important;
 }
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f8ff;
-  margin: 0;
-  padding: 20px;
-  box-sizing: border-box;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
-.main-header {
-  text-align: center;
-  padding: 20px 0;
-  background-color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  margin-bottom: 30px;
-  width: 100%;
-  max-width: 700px;
-  border-radius: 8px;
-}
-
-.website-main-logo {
-  max-width: 250px;
-  display: block;
-  margin: 0 auto 15px auto;
-  height: auto;
-}
-
-.container {
-  background-color: #1A202C;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 700px;
-  width: 100%;
-  margin-bottom: 30px;
-  position: relative;
-  overflow: hidden;
-  opacity: 0;
+gradio-app.is-processing {
+  opacity: 0.5;
   pointer-events: none;
-  transition: opacity 0.5s ease-in-out;
-}
-
-.container.loaded {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.container h1 {
-  color: #F8FAFC;
-  margin-bottom: 15px;
-  font-size: 2.2em;
-}
-
-.container p {
-  color: #E2E8F0;
-  line-height: 1.6;
-  margin-bottom: 15px;
-}
-
-gradio-app {
-  width: 100%;
-  margin-top: 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
-
-.blog-links,
-.support-section,
-.nav-buttons-section {
-  background-color: #e6f7ff;
-  padding: 25px;
-  border-radius: 8px;
-  margin-top: 30px;
-  max-width: 700px;
-  width: 100%;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-}
-
-.blog-links h2,
-.support-section h2,
-.nav-buttons-section h2 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  font-size: 1.8em;
-}
-
-.blog-links p,
-.support-section p,
-.nav-buttons-section p {
-  color: #4A5568;
-  line-height: 1.6;
-}
-
-.blog-links ul {
-  list-style: none;
-  padding: 0;
-}
-
-.blog-links li {
-  margin-bottom: 10px;
-}
-
-.blog-links a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.blog-links a:hover {
-  text-decoration: underline;
-}
-
-.support-button {
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.support-button:hover {
-  background-color: #218838;
-}
-
-.nav-buttons-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.nav-button {
-  padding: 10px 18px;
-  background-image: linear-gradient(to right, #6A1B9A, #9C27B0);
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.nav-button:hover {
-  transform: translateY(-2px);
-  background-image: linear-gradient(to right, #9C27B0, #6A1B9A);
-}
-
-/* Spinner Overlay */
-#initial-loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f0f8ff;
-  z-index: 9999;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-#initial-loading-overlay.loading-visible {
-  display: flex;
-  opacity: 1;
-  visibility: visible;
-}
-
-#initial-loading-overlay.loading-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-}
-
-.spinner-logo {
-  width: 120px;
-  height: 120px;
-  animation: flip 2s ease-in-out infinite alternate;
-}
-
-@keyframes flip {
-  0% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(180deg);
-  }
-}
-
-/* Processing Spinner */
-#processing-spinner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba(255, 255, 255, 0.8);
-  width: 100%;
-  height: 100%;
-  z-index: 1500;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.processing-visible {
-  display: flex !important;
-}
-
-.processing-hidden {
-  display: none !important;
 }
