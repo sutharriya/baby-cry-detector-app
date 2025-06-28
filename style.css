@@ -80,7 +80,7 @@ gradio-app {
 
 /* Styling for the main heading inside the tool container */
 .container h1 {
-    color: #F8FAFC;
+    color: #F8FAFA; /* Changed to match Gradio's text color */
     margin-bottom: 15px;
     font-size: 2.2em;
 }
@@ -281,7 +281,7 @@ gradio-app {
 .spinner-logo {
     width: 120px; /* Size of your spinning circular logo (adjust as needed for your image) */
     height: 120px;
-animation: half-spin 2s ease-in-out infinite alternate; /* 'spin' को 'half-spin' में बदला, और properties भी बदली */
+    animation: half-spin 2s ease-in-out infinite alternate; /* 'spin' को 'half-spin' में बदला, और properties भी बदली */
 }
 
 /* --- Utility classes for showing/hiding with smooth transitions --- */
