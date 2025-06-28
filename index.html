@@ -9,7 +9,7 @@
     <meta name="keywords" content="baby cry analyzer, cry analyzer online, baby cry analyzer app, baby cry analyzer free, baby cry analyzer app free, baby cry sound analyzer, cry analyzer baby translator app, cry analyzer baby translator, best cry analyzer app, cry analyzer online free, cry alert, cry detection sensor, cry sound machine, understand infant cries, AI baby tool, newborn cry meaning">
 
     <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/5.33.0/gradio.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googiclickeyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_ADSENSE_ID" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="/baby-cry-detector-app/style.css">
     <link rel="icon" href="/baby-cry-detector-app/favicon.ico" type="image/x-icon">
@@ -18,19 +18,33 @@
 
     <!-- Main website header - This will always be visible -->
     <div class="main-header"> 
-        <!-- Assuming logofull.png is your rectangular main logo. Please confirm if it's 'logofull.png' -->
         <img src="/baby-cry-detector-app/logofull.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo">
     </div>
 
+    <!-- Initial loading overlay - This will be visible until the Gradio tool loads -->
+    <div id="initial-loading-overlay">
+        <div class="spinner-container">
+            <img src="/baby-cry-detector-app/circular_logo.png" alt="Loading Logo" class="spinner-logo">
+            <p>Initializing AI Baby Cry Analyzer....</p>
+        </div>
+    </div>
+
     <!-- Main content container, including the Gradio tool and its related text -->
-    <!-- This container will now be visible by default -->
+    <!-- This container will be hidden initially by CSS and shown by JavaScript when Gradio loads -->
     <div class="container" id="tool-container">
         <h1>AI Baby Cry Analyzer: Understand Your Infant's Cries Instantly</h1>
         <p>Welcome, new parents! Are you struggling to understand why your baby is crying? Our free online "AI Baby Cry Analyzer" can help. Simply upload or record your baby's cry, and our advanced tool will provide instant insights into the possible reasons behind it, giving you peace of mind.</p>
         <p>Built with cutting-edge AI technology, this baby cry translator tool aims to assist you in decoding different types of infant cries, whether it's for hunger, sleep, discomfort, or more. Get accurate, real-time analysis directly from your browser. It's the **best cry analyzer app** you'll find for quick insights!</p>
         
-        <!-- Gradio App Embed Code -->
+        <!-- Gradio App Embed Code - Added ID for JavaScript targeting -->
         <gradio-app src="https://sutharriya-baby-cry-detector-new.hf.space" id="gradio-tool"></gradio-app>
+
+        <!-- Processing spinner overlay for Gradio app (initially hidden) -->
+        <!-- This will appear when Gradio is processing an input -->
+        <div id="processing-spinner" class="processing-hidden">
+            <img src="/baby-cry-detector-app/circular_logo.png" alt="Processing..." class="spinner-logo">
+            <p>Analyzing cry... Please wait.</p>
+        </div>
     </div>
 
     <!-- Blog Links Section -->
@@ -38,8 +52,7 @@
         <h2>Learn More About Baby Cries and Parenting</h2>
         <p>Explore our helpful articles and guides to better understand your baby's needs:</p>
         <ul>
-            <!-- Corrected filenames for these links -->
-            <li><a href="/baby-cry-detector-app/why-babies-cry.types.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
+            <li><a href="/baby-cry-detector-app/why-babies-cry,types.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
             <li><a href="/baby-cry-detector-app/soothing-a-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
             <li><a href="/baby-cry-detector-app/faq.html">Baby Cry Analyzer - Frequently Asked Questions (F.A.Q.)</a></li>
         </ul>
@@ -64,6 +77,67 @@
         </div>
     </div>
 
-    <!-- No JavaScript code for controlling loaders in this version -->
+    <!-- JavaScript code for controlling loaders -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialLoadingOverlay = document.getElementById('initial-loading-overlay');
+            const toolContainer = document.getElementById('tool-container');
+            const gradioTool = document.getElementById('gradio-tool'); 
+            const processingSpinner = document.getElementById('processing-spinner');
+
+            // --- Initial page loader (runs until Gradio app fully loads) ---
+            // Ensure the initial overlay is visible immediately on DOMContentLoaded
+            initialLoadingOverlay.classList.remove('loading-hidden'); 
+            initialLoadingOverlay.classList.add('loading-visible');
+
+            if (gradioTool) {
+                // Listen for the 'load' event on the gradio-app element
+                // This event fires when the Gradio component itself has finished rendering its content
+                gradioTool.addEventListener('load', () => {
+                    console.log('Gradio app fully loaded.');
+                    // Introduce a very short delay for smooth transition, then hide initial loader
+                    setTimeout(() => {
+                        initialLoadingOverlay.classList.remove('loading-visible');
+                        initialLoadingOverlay.classList.add('loading-hidden');
+                        toolContainer.classList.add('loaded'); // Show main tool content
+                        gradioTool.classList.add('loaded'); // Show Gradio app
+                    }, 500); // 0.5 second delay for smooth fade-out
+                });
+
+                // --- Gradio Processing Spinner (appears when you interact with the tool) ---
+                gradioTool.addEventListener('submit', () => {
+                    processingSpinner.classList.remove('processing-hidden');
+                    processingSpinner.classList.add('processing-visible');
+                    gradioTool.classList.add('is-processing'); // Optional: Dim Gradio app slightly
+                });
+
+                gradioTool.addEventListener('message', (event) => {
+                    // Gradio sends messages for various states. We assume 'message' after 'submit' means completion.
+                    // A small timeout ensures the user sees the spinner for a minimum duration.
+                    setTimeout(() => {
+                        processingSpinner.classList.remove('processing-visible');
+                        processingSpinner.classList.add('processing-hidden');
+                        gradioTool.classList.remove('is-processing');
+                    }, 500); 
+                });
+
+                gradioTool.addEventListener('error', () => {
+                    processingSpinner.classList.remove('processing-visible');
+                    processingSpinner.classList.add('processing-hidden');
+                    gradioTool.classList.remove('is-processing');
+                    console.error("Gradio app encountered an error.");
+                });
+
+            } else {
+                console.warn("Gradio app element with ID 'gradio-tool' not found. Initial loader might not hide automatically.");
+                // Fallback: If Gradio app element is not found, hide initial loader after a few seconds anyway
+                setTimeout(() => {
+                    initialLoadingOverlay.classList.remove('loading-visible');
+                    initialLoadingOverlay.classList.add('loading-hidden');
+                    toolContainer.classList.add('loaded'); 
+                }, 3000); // Hide after 3 seconds as a fallback
+            }
+        });
+    </script>
 </body>
 </html>
