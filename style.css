@@ -67,34 +67,37 @@ gradio-app {
   transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
+/* Spinner overlay visible class */
 .loading-visible {
-  opacity: 1;
-  visibility: visible;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
 }
 
-/* Hide overlay */
+/* Spinner overlay hidden after 10s */
 .loading-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
 }
 
-/* Spinner animation */
+/* Spinner logo animation */
 .spinner-logo {
-  width: 120px;
-  height: 120px;
-  animation: flip 2s ease-in-out infinite alternate;
-  backface-visibility: hidden;
+    width: 120px;
+    height: 120px;
+    animation: flip 2s ease-in-out infinite alternate;
+    backface-visibility: hidden;
 }
 
+/* Flip animation keyframes */
 @keyframes flip {
-  0% { transform: rotateY(0deg); }
-  100% { transform: rotateY(180deg); }
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(180deg); }
 }
 
 /* Processing Spinner (Gradio) */
