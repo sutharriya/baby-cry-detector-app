@@ -18,13 +18,13 @@
 
     <!-- Main website header - This will always be visible -->
     <div class="main-header"> 
-        <!-- Assuming logo.png is your rectangular main logo. Confirm if it's 'logofull.png' -->
+        <!-- Please confirm if your main logo file is 'logo.png' or 'logofull.png' -->
         <img src="/baby-cry-detector-app/logofull.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo">
     </div>
 
     <!-- Initial 10-second loading overlay for the entire tool content -->
     <!-- This will be visible for 10 seconds, then hide to reveal the tool content -->
-    <div id="initial-loading-overlay">
+    <div id="initial-loading-overlay" class="loading-visible"> <!-- Initially visible by default -->
         <div class="spinner-container">
             <!-- Your circular logo for the spinning animation -->
             <img src="/baby-cry-detector-app/circular_logo.png" alt="Loading Logo" class="spinner-logo">
@@ -33,7 +33,7 @@
     </div>
 
     <!-- Main content container, including the Gradio tool and its related text -->
-    <!-- This container will be hidden initially and shown after the initial loader is done -->
+    <!-- This container will be hidden initially (via CSS opacity) and shown after the initial loader is done -->
     <div class="container" id="tool-container">
         <h1>AI Baby Cry Analyzer: Understand Your Infant's Cries Instantly</h1>
         <p>Welcome, new parents! Are you struggling to understand why your baby is crying? Our free online "AI Baby Cry Analyzer" can help. Simply upload or record your baby's cry, and our advanced tool will provide instant insights into the possible reasons behind it, giving you peace of mind.</p>
@@ -57,7 +57,7 @@
         <ul>
             <!-- Corrected filenames for these links -->
             <li><a href="/baby-cry-detector-app/why-babies-cry-types.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
-            <li><a href="/baby-cry-detector-app/soothing-a-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
+            <li><a href="/baby-cry-detector-app/soothing-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
             <li><a href="/baby-cry-detector-app/faq.html">Baby Cry Analyzer - Frequently Asked Questions (F.A.Q.)</a></li>
         </ul>
     </div>
@@ -90,21 +90,17 @@
             const processingSpinner = document.getElementById('processing-spinner');
 
             // --- Initial 10-second page loader ---
-            // Ensure the initial overlay is visible immediately on DOMContentLoaded
-            initialLoadingOverlay.classList.remove('loading-hidden'); 
-            initialLoadingOverlay.classList.add('loading-visible');
-
             // Hide the initial loader and show the tool content after 10 seconds
             setTimeout(() => {
                 initialLoadingOverlay.classList.remove('loading-visible');
                 initialLoadingOverlay.classList.add('loading-hidden'); // Start fade-out effect
-
-                // After the fade-out, ensure the initialLoadingOverlay is completely removed from layout
-                // and then display the toolContainer.
-                initialLoadingOverlay.addEventListener('transitionend', () => {
-                    initialLoadingOverlay.style.display = 'none'; // Completely remove from layout
-                    toolContainer.style.display = 'block'; // Make tool container block-level
-                    toolContainer.classList.add('loaded'); // Trigger fade-in on tool container
+                
+                // After the fade-out, reveal the tool container
+                // This listener ensures the toolContainer becomes interactive ONLY after transition
+                initialLoadingOverlay.addEventListener('transitionend', function handler() {
+                    toolContainer.classList.add('loaded'); // This makes toolContainer visible and interactive
+                    // Remove the event listener to prevent it from firing multiple times
+                    initialLoadingOverlay.removeEventListener('transitionend', handler);
                 }, { once: true }); // Ensure this listener fires only once
 
             }, 10000); // 10,000 milliseconds = 10 seconds
