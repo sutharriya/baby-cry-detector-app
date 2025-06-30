@@ -20,12 +20,16 @@
   </div>
 
   <!-- Initial Loading Spinner -->
-  <div id="initial-loading-overlay">
-    <div class="spinner-container">
+ <!-- Initial Loading Spinner -->
+<div id="initial-loading-overlay">
+  <div class="spinner-container">
+    <div class="wave-spinner">
+      <div class="wave-circle"></div>
       <img src="/baby-cry-detector-app/circular_logo.png" alt="Loading Logo" class="spinner-logo" />
-      <p>Initializing AI Baby Cry Analyzer... Please wait.</p>
     </div>
+    <p>Initializing AI Baby Cry Analyzer... Please wait.</p>
   </div>
+</div>
 
   <!-- Gradio Tool Section -->
   <div class="container" id="tool-container">
@@ -34,13 +38,17 @@
     <p>Built with cutting-edge AI technology, this baby cry translator tool aims to assist you in decoding different types of infant cries, whether it's for hunger, sleep, discomfort, or more. Get accurate, real-time analysis directly from your browser. It's the <strong>best cry analyzer app</strong> you'll find for quick insights!</p>
 
     <gradio-app src="https://sutharriya-baby-cry-detector-new.hf.space" id="gradio-tool"></gradio-app>
-
-    <!-- Processing Spinner for Gradio -->
-    <div id="processing-spinner" class="processing-hidden">
-      <img src="/baby-cry-detector-app/circular_logo.png" alt="Processing..." class="spinner-logo" />
-      <p>Analyzing cry... Please wait.</p>
+<!-- Initial Loading Spinner -->
+<div id="initial-loading-overlay">
+  <div class="spinner-container">
+    <div class="wave-spinner">
+      <div class="wave-circle"></div>
+      <img src="/baby-cry-detector-app/circular_logo.png" alt="Loading Logo" class="spinner-logo" />
     </div>
+    <p>Initializing AI Baby Cry Analyzer... Please wait.</p>
   </div>
+</div>
+
 
   <!-- Blog Links -->
   <div class="blog-links">
