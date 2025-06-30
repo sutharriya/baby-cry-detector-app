@@ -1,318 +1,383 @@
 /* --- Base styles for the body --- */
 body {
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f0f8ff;
-  margin: 0;
-  padding: 20px;
-  box-sizing: border-box;
-  color: #333;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f8ff;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  color: #333;
 }
 
 /* --- Header and Logo --- */
 .main-header {
-  text-align: center;
-  padding: 20px 0;
-  background-color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  margin-bottom: 30px;
-  width: 100%;
-  max-width: 700px;
-  border-radius: 8px;
+  text-align: center;
+  padding: 20px 0;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 700px;
+  border-radius: 8px;
 }
 
 .website-main-logo {
-  max-width: 250px;
-  height: auto;
-  display: block;
-  margin: 0 auto 15px auto;
+  max-width: 250px;
+  height: auto;
+  display: block;
+  margin: 0 auto 15px auto;
 }
 
 @media (max-width: 768px) {
-  .website-main-logo {
-    max-width: 200px;
-    margin-bottom: 10px;
-  }
-  .main-header {
-    padding: 15px 0;
-  }
+  .website-main-logo {
+    max-width: 200px;
+    margin-bottom: 10px;
+  }
+  .main-header {
+    padding: 15px 0;
+  }
 }
 
 /* --- Tool Container --- */
 #tool-container {
-  background-color: #1A202C;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 700px;
-  width: 100%;
-  margin-top: 0;
-  margin-bottom: 30px;
-  position: relative;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease-in-out;
+  background-color: #1A202C;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 700px;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
 }
 
 #tool-container.loaded {
-  opacity: 1;
-  pointer-events: auto;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 gradio-app {
-  width: 100%;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-top: 25px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  transition: opacity 0.5s ease-in-out;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.5s ease-in-out;
 }
 
 .container h1 {
-  color: #F8FAFC;
-  margin-bottom: 15px;
-  font-size: 2.2em;
+  color: #F8FAFC;
+  margin-bottom: 15px;
+  font-size: 2.2em;
 }
 
 .container p {
-  color: #E2E8F0;
-  line-height: 1.6;
-  margin-bottom: 15px;
+  color: #E2E8F0;
+  line-height: 1.6;
+  margin-bottom: 15px;
 }
 
 /* --- Blog and Footer Sections --- */
 .blog-links,
 .support-section,
 .nav-buttons-section {
-  background-color: #e6f7ff;
-  padding: 25px;
-  border-radius: 8px;
-  margin-top: 30px;
-  max-width: 700px;
-  width: 100%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  text-align: center;
+  background-color: #e6f7ff;
+  padding: 25px;
+  border-radius: 8px;
+  margin-top: 30px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
 .blog-links h2,
 .support-section h2,
 .nav-buttons-section h2 {
-  color: #2c3e50;
-  margin-bottom: 20px;
-  font-size: 1.8em;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.8em;
 }
 
 .blog-links p,
 .support-section p,
 .nav-buttons-section p {
-  color: #4A5568;
-  line-height: 1.6;
-  margin-bottom: 15px;
+  color: #4A5568;
+  line-height: 1.6;
+  margin-bottom: 15px;
 }
 
 .blog-links ul {
-  list-style: none;
-  padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 .blog-links li {
-  margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .blog-links a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .blog-links a:hover {
-  text-decoration: underline;
+  text-decoration: underline;
 }
 
 .support-button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  margin-top: 15px;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-top: 15px;
 }
 
 .support-button:hover {
-  background-color: #218838;
+  background-color: #218838;
 }
 
 /* --- Content Pages --- */
 .content-page-container {
-  margin-top: 30px;
-  max-width: 700px;
-  width: 100%;
-  background-color: #ffffff;
-  padding: 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-  text-align: left;
-  overflow-y: auto;
-  margin-bottom: 30px;
+  margin-top: 30px;
+  max-width: 700px;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  overflow-y: auto;
+  margin-bottom: 30px;
 }
 
 .content-page-container h1,
 .content-page-container h2,
 .content-page-container h3 {
-  color: #2c3e50;
-  text-align: left;
-  margin-bottom: 15px;
+  color: #2c3e50;
+  text-align: left;
+  margin-bottom: 15px;
 }
 
 .content-page-container p {
-  color: #555;
-  text-align: left;
-  line-height: 1.7;
-  margin-bottom: 1em;
+  color: #555;
+  text-align: left;
+  line-height: 1.7;
+  margin-bottom: 1em;
 }
 
 .content-page-container ul {
-  list-style: disc;
-  text-align: left;
-  margin-left: 20px;
-  margin-bottom: 1em;
+  list-style: disc;
+  text-align: left;
+  margin-left: 20px;
+  margin-bottom: 1em;
 }
 
 .content-page-container ul li {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 /* --- Navigation Buttons --- */
 .nav-buttons-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
 }
 
 .nav-button {
-  display: inline-block;
-  padding: 8px 18px;
-  font-size: 0.9em;
-  background-image: linear-gradient(to right, #6A1B9A, #9C27B0);
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: none;
-  cursor: pointer;
-  flex-grow: 1;
-  max-width: 160px;
+  display: inline-block;
+  padding: 8px 18px;
+  font-size: 0.9em;
+  background-image: linear-gradient(to right, #6A1B9A, #9C27B0);
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  flex-grow: 1;
+  max-width: 160px;
 }
 
 .nav-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  background-image: linear-gradient(to right, #9C27B0, #6A1B9A);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-image: linear-gradient(to right, #9C27B0, #6A1B9A);
 }
 
 @media (max-width: 768px) {
-  .nav-buttons-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  .nav-button {
-    max-width: 80%;
-    padding: 10px 20px;
-    font-size: 1em;
-  }
+  .nav-buttons-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .nav-button {
+    max-width: 80%;
+    padding: 10px 20px;
+    font-size: 1em;
+  }
 }
 
 /* --- Initial Spinner Overlay --- */
 #initial-loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #f0f8ff;
-  z-index: 9999;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f8ff;
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 #initial-loading-overlay.loading-visible {
-  display: flex;
-  opacity: 1;
-  visibility: visible;
+  display: flex;
+  opacity: 1;
+  visibility: visible;
 }
 
 #initial-loading-overlay.loading-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
 }
 
 .spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ************************************************************ */
+/* ************* यहाँ CSS बदलाव किया गया है ******************* */
+/* ************************************************************ */
+
+/* Spinner wrapper for waves and logo */
+.spinner-wave-effect {
+  position: relative;
+  width: 180px; /* Total size of the wave animation area */
+  height: 180px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-.spinner-logo {
-  width: 120px;
-  height: 120px;
-  animation: half-rotate 2s linear infinite;
-  border-radius: 50%;
-  object-fit: cover;
-  transform-style: preserve-3d;
-  margin: 0 auto;
-}
-
-@keyframes half-rotate {
-  0% {
-    transform: rotateX(0deg);
-  }
-  100% {
-    transform: rotateX(180deg);
-  }
-}
-
-/* --- Gradio Processing Spinner --- */
-#processing-spinner {
+/* Main rotating circle that contains the waves */
+.spinner-wave-circle {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(255, 255, 255, 0.8);
   width: 100%;
   height: 100%;
-  z-index: 1500;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: spin 3s linear infinite; /* Slower spin for better wave visibility */
 }
 
-.processing-visible {
-  display: flex !important;
+/* Wave rings using pseudo-elements */
+.spinner-wave-circle::before,
+.spinner-wave-circle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+  border: 4px solid; /* Thickness of wave rings */
+  opacity: 0; /* Start invisible */
+  animation: wavePulse 2.5s infinite ease-out; /* Wave pulse animation */
 }
 
-.processing-hidden {
-  display: none !important;
+.spinner-wave-circle::before {
+  border-color: #00bcd4; /* First wave color (blue) */
+  animation-delay: 0s;
 }
 
-gradio-app.is-processing {
-  opacity: 0.5;
-  pointer-events: none;
+.spinner-wave-circle::after {
+  border-color: #ff9800; /* Second wave color (orange) */
+  animation-delay: 1.25s; /* Stagger the second wave */
 }
+
+/* Inner solid circle behind the logo */
+.spinner-inner-solid-circle {
+    position: absolute;
+    width: 120px; /* Size of the inner solid circle */
+    height: 120px;
+    background-color: #4CAF50; /* Solid core color (green) */
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.5); /* Subtle glow */
+}
+
+/* Your actual logo, now static in the center */
+.spinner-logo {
+  width: 120px; /* Adjust to fit your logo well inside the wave */
+  height: 120px; /* Adjust to fit your logo well inside the wave */
+  border-radius: 50%; /* Keep if your logo is circular or you want it rounded */
+  object-fit: contain; /* Ensure the logo scales correctly without cropping */
+  position: absolute; /* Position it absolutely within .spinner-wave-effect */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the logo precisely */
+  z-index: 10; /* Ensure logo is on top of waves and solid circle */
+  animation: none; /* <--- IMPORTANT: Remove original animation from logo */
+}
+
+/* Keyframes for animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes wavePulse {
+  0% {
+    transform: scale(0.6); /* Start smaller */
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.1); /* Expand outwards */
+    opacity: 0; /* Fade out */
+  }
+}
+
+/* Old spinner-logo animation (commented out or removed) */
+/*
+@keyframes half-rotate {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(180deg);
+  }
+}
+*/
+
+/* ************************************************************ */
+/* ************* यहाँ CSS बदलाव समाप्त हुआ ******************* */
+/* ************************************************************ */
