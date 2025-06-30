@@ -72,47 +72,45 @@
       <a href="mailto:your-email@example.com?subject=Feedback about Baby Cry Analyzer" class="nav-button" target="_blank">Feedback</a>
     </div>
   </div>
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const initialOverlay = document.getElementById('initial-loading-overlay');
+      const toolContainer = document.getElementById('tool-container');
+      const gradioTool = document.getElementById('gradio-tool');
+      const processingSpinner = document.getElementById('processing-spinner');
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const initialOverlay = document.getElementById('initial-loading-overlay');
-      const toolContainer = document.getElementById('tool-container');
-      const gradioTool = document.getElementById('gradio-tool');
-      const processingSpinner = document.getElementById('processing-spinner');
+      const checkGradioLoaded = setInterval(() => {
+        const iframe = gradioTool.shadowRoot?.querySelector('iframe');
+        if (iframe && iframe.contentWindow?.document.readyState === 'complete') {
+          clearInterval(checkGradioLoaded);
+          initialOverlay.classList.remove('loading-visible');
+          initialOverlay.classList.add('loading-hidden');
+          toolContainer.classList.add('loaded');
+        }
+      }, 300);
 
-      // Show spinner
-      initialOverlay.classList.add('loading-visible');
+      if (gradioTool) {
+        gradioTool.addEventListener('submit', () => {
+          processingSpinner.classList.remove('processing-hidden');
+          processingSpinner.classList.add('processing-visible');
+          gradioTool.classList.add('is-processing');
+        });
 
-      // After 10 seconds, show tool
-      setTimeout(() => {
-        initialOverlay.classList.remove('loading-visible');
-        initialOverlay.classList.add('loading-hidden');
-        toolContainer.classList.add('loaded');
-      }, 10000);
+        gradioTool.addEventListener('message', () => {
+          setTimeout(() => {
+            processingSpinner.classList.remove('processing-visible');
+            processingSpinner.classList.add('processing-hidden');
+            gradioTool.classList.remove('is-processing');
+          }, 500);
+        });
 
-      // Gradio app processing spinner
-      if (gradioTool) {
-        gradioTool.addEventListener('submit', () => {
-          processingSpinner.classList.remove('processing-hidden');
-          processingSpinner.classList.add('processing-visible');
-          gradioTool.classList.add('is-processing');
-        });
-
-        gradioTool.addEventListener('message', () => {
-          setTimeout(() => {
-            processingSpinner.classList.remove('processing-visible');
-            processingSpinner.classList.add('processing-hidden');
-            gradioTool.classList.remove('is-processing');
-          }, 500);
-        });
-
-        gradioTool.addEventListener('error', () => {
-          processingSpinner.classList.remove('processing-visible');
-          processingSpinner.classList.add('processing-hidden');
-          gradioTool.classList.remove('is-processing');
-        });
-      }
-    });
+        gradioTool.addEventListener('error', () => {
+          processingSpinner.classList.remove('processing-visible');
+          processingSpinner.classList.add('processing-hidden');
+          gradioTool.classList.remove('is-processing');
+        });
+      }
+    });
   </script>
 </body>
 </html>
