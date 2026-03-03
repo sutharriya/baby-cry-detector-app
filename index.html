@@ -1,118 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Baby Cry Analyzer: Understand Your Infant's Cries with AI - Free Online Tool</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Baby Cry Analyzer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <meta name="description" content="Use our free online AI Baby Cry Analyzer to understand why your infant is crying. Get instant insights into different cry types like hunger, sleep, or discomfort. Your essential baby cry translator app.">
-  <meta name="keywords" content="baby cry analyzer, cry analyzer online, baby cry analyzer app, baby cry analyzer free, baby cry analyzer app free, baby cry sound analyzer, cry analyzer baby translator app, cry analyzer baby translator, best cry analyzer app, cry analyzer online free, cry alert, cry detection sensor, cry sound machine, understand infant cries, AI baby tool, newborn cry meaning">
+<style>
+:root{
+--primary:#6d28d9;
+--secondary:#0ea5e9;
+--bg:#0f172a;
+--card:#1e293b;
+--text:#ffffff;
+}
 
-  <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/5.33.0/gradio.js"></script>
-  <link rel="stylesheet" href="/baby-cry-detector-app/style.css" />
-  <link rel="icon" href="/baby-cry-detector-app/favicon.ico" type="image/x-icon" />
+body.light{
+--bg:#f8fafc;
+--card:#ffffff;
+--text:#0f172a;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+transition:0.3s;
+}
+
+/* LOADER */
+#loader{
+position:fixed;
+width:100%;
+height:100%;
+background:var(--bg);
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.spinner{
+width:60px;
+height:60px;
+border:6px solid #334155;
+border-top:6px solid var(--primary);
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+100%{transform:rotate(360deg);}
+}
+
+/* NAVBAR */
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 50px;
+background:var(--card);
+box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+
+nav h2{
+color:var(--primary);
+font-weight:700;
+}
+
+nav ul{
+display:flex;
+list-style:none;
+gap:25px;
+align-items:center;
+}
+
+nav ul li a{
+text-decoration:none;
+color:var(--text);
+font-weight:500;
+}
+
+nav ul li a:hover{
+color:var(--primary);
+}
+
+.toggle{
+cursor:pointer;
+padding:8px 15px;
+background:var(--primary);
+border-radius:20px;
+color:white;
+font-size:14px;
+}
+
+/* HERO */
+.hero{
+text-align:center;
+padding:100px 20px;
+background:linear-gradient(135deg,var(--primary),var(--secondary));
+color:white;
+}
+
+.hero h1{
+font-size:42px;
+margin-bottom:20px;
+}
+
+.hero p{
+max-width:700px;
+margin:0 auto 30px;
+font-size:18px;
+}
+
+.hero button{
+padding:14px 35px;
+border:none;
+border-radius:30px;
+font-weight:600;
+cursor:pointer;
+}
+
+/* SECTION */
+.section{
+padding:80px 20px;
+max-width:1100px;
+margin:auto;
+text-align:center;
+}
+
+.upload-box{
+background:var(--card);
+padding:40px;
+border-radius:15px;
+margin-top:30px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.progress{
+width:100%;
+background:#334155;
+height:8px;
+border-radius:10px;
+margin-top:15px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:8px;
+width:0%;
+background:#22c55e;
+transition:1s;
+}
+
+/* FOOTER */
+footer{
+padding:40px;
+text-align:center;
+border-top:1px solid #334155;
+margin-top:60px;
+}
+
+footer a{
+margin:0 10px;
+color:var(--primary);
+text-decoration:none;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+nav{flex-direction:column;gap:15px;}
+.hero h1{font-size:28px;}
+}
+</style>
 </head>
+
 <body>
 
-  <!-- Website Header -->
-  <div class="main-header">
-    <img src="/baby-cry-detector-app/logofull.png" alt="AI Baby Cry Analyzer Logo" class="website-main-logo" />
-  </div>
+<!-- PAGE LOADER -->
+<div id="loader">
+<div class="spinner"></div>
+</div>
 
-  <!-- Initial Loading Spinner -->
-  <div id="initial-loading-overlay" class="loading-visible">
-    <div class="spinner-container">
-      <img src="/baby-cry-detector-app/circular_logo.png" alt="Loading Logo" class="spinner-logo" />
-      <p>Initializing AI Baby Cry Analyzer... Please wait.</p>
-    </div>
-  </div>
+<!-- NAVBAR -->
+<nav>
+<h2>BabyCry AI</h2>
+<ul>
+<li><a href="#upload">Analyze</a></li>
+<li><a href="https://mombabycaretips.com" target="_blank">Blog</a></li>
+<li><a href="#">Pricing</a></li>
+<li><a href="#">Login</a></li>
+</ul>
+<div class="toggle" onclick="toggleMode()">Toggle Mode</div>
+</nav>
 
-  <!-- Gradio Tool Section -->
-  <div class="container" id="tool-container">
-    <h1>AI Baby Cry Analyzer: Understand Your Infant's Cries Instantly</h1>
-    <p>Welcome, new parents! Are you struggling to understand why your baby is crying? Our free online "AI Baby Cry Analyzer" can help. Simply upload or record your baby's cry, and our advanced tool will provide instant insights into the possible reasons behind it, giving you peace of mind.</p>
-    <p>Built with cutting-edge AI technology, this baby cry translator tool aims to assist you in decoding different types of infant cries, whether it's for hunger, sleep, discomfort, or more. Get accurate, real-time analysis directly from your browser. It's the <strong>best cry analyzer app</strong> you'll find for quick insights!</p>
+<!-- HERO -->
+<section class="hero">
+<h1>Understand Your Baby's Cry Instantly</h1>
+<p>Advanced AI technology helps you decode hunger, sleep, discomfort, and more in seconds.</p>
+<button onclick="scrollToUpload()">Start Free Analysis</button>
+</section>
 
-    <gradio-app src="https://sutharriya-baby-cry-detector-new.hf.space" id="gradio-tool"></gradio-app>
+<!-- UPLOAD -->
+<section class="section" id="upload">
+<h2>Upload Baby Cry Audio</h2>
 
-    <!-- Processing Spinner for Gradio -->
-    <div id="processing-spinner" class="processing-hidden">
-      <img src="/baby-cry-detector-app/circular_logo.png" alt="Processing..." class="spinner-logo" />
-      <p>Analyzing cry... Please wait.</p>
-    </div>
-  </div>
+<div class="upload-box">
+<input type="file">
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+<button style="margin-top:15px;padding:12px 30px;border:none;border-radius:20px;background:var(--primary);color:white;" onclick="analyze()">Analyze</button>
+</div>
+</section>
 
-  <!-- Blog Links -->
-  <div class="blog-links">
-    <h2>Learn More About Baby Cries and Parenting</h2>
-    <p>Explore our helpful articles and guides to better understand your baby's needs:</p>
-    <ul>
-      <li><a href="/baby-cry-detector-app/why-babies-cry-types.html">Why Do Babies Cry? Types of Cries & How to Understand Them</a></li>
-      <li><a href="/baby-cry-detector-app/soothing-crying-baby.html">7 Effective Ways to Soothe a Crying Baby</a></li>
-      <li><a href="/baby-cry-detector-app/faq.html">Baby Cry Analyzer - Frequently Asked Questions (F.A.Q.)</a></li>
-    </ul>
-  </div>
+<!-- FOOTER -->
+<footer>
+<p>© 2026 BabyCry AI</p>
+<a href="#">Privacy Policy</a>
+<a href="#">Disclaimer</a>
+<a href="#">FAQ</a>
+</footer>
 
-  <!-- Support Section -->
-  <div class="support-section">
-    <h2>Did Our Tool Help You?</h2>
-    <p>If our <strong>free Baby Cry Analyzer</strong> provided valuable insights and peace of mind, consider supporting our ongoing efforts to develop helpful tools for parents. Your contribution helps us keep this service free and improve it!</p>
-    <a href="YOUR_PAYPAL_OR_BUYMEACOFFEE_LINK" target="_blank" class="support-button">Support Our Work!</a>
-    <p style="font-size: 0.8em; color: #777; margin-top: 10px;">(This is a donation, not a payment for service.)</p>
-  </div>
+<script>
+/* PAGE LOAD SPINNER */
+window.onload = function(){
+document.getElementById("loader").style.display="none";
+}
 
-  <!-- Footer Nav Links -->
-  <div class="nav-buttons-section">
-    <h2>More Information</h2>
-    <div class="nav-buttons-container">
-      <a href="/baby-cry-detector-app/about-us.html" class="nav-button">About Us</a>
-      <a href="/baby-cry-detector-app/privacy-policy.html" class="nav-button">Privacy Policy</a>
-      <a href="/baby-cry-detector-app/disclaimer.html" class="nav-button">Disclaimer</a>
-      <a href="mailto:your-email@example.com?subject=Feedback about Baby Cry Analyzer" class="nav-button" target="_blank">Feedback</a>
-    </div>
-  </div>
+/* DARK MODE */
+function toggleMode(){
+document.body.classList.toggle("light");
+}
 
-  <!-- Spinner Control Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const initialOverlay = document.getElementById('initial-loading-overlay');
-      const toolContainer = document.getElementById('tool-container');
-      const gradioTool = document.getElementById('gradio-tool');
-      const processingSpinner = document.getElementById('processing-spinner');
+/* SCROLL */
+function scrollToUpload(){
+document.getElementById("upload").scrollIntoView({behavior:"smooth"});
+}
 
-      // Show spinner
-      initialOverlay.classList.add('loading-visible');
+/* FAKE ANALYZE */
+function analyze(){
+let bar = document.getElementById("progressBar");
+bar.style.width="0%";
+setTimeout(()=>{bar.style.width="100%";},200);
+}
+</script>
 
-      // After 10 seconds, show tool
-      setTimeout(() => {
-        initialOverlay.classList.remove('loading-visible');
-        initialOverlay.classList.add('loading-hidden');
-        toolContainer.classList.add('loaded');
-      }, 10000);
-
-      // Gradio app processing spinner
-      if (gradioTool) {
-        gradioTool.addEventListener('submit', () => {
-          processingSpinner.classList.remove('processing-hidden');
-          processingSpinner.classList.add('processing-visible');
-          gradioTool.classList.add('is-processing');
-        });
-
-        gradioTool.addEventListener('message', () => {
-          setTimeout(() => {
-            processingSpinner.classList.remove('processing-visible');
-            processingSpinner.classList.add('processing-hidden');
-            gradioTool.classList.remove('is-processing');
-          }, 500);
-        });
-
-        gradioTool.addEventListener('error', () => {
-          processingSpinner.classList.remove('processing-visible');
-          processingSpinner.classList.add('processing-hidden');
-          gradioTool.classList.remove('is-processing');
-        });
-      }
-    });
-  </script>
 </body>
 </html>
